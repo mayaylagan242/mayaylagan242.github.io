@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html>
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href=fa-solid%20fa-square-m type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+>
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      media="print" onload="this.media='all'" />
+<noscript>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="Modeling, Testing, and Predicting" />
+<meta property="og:description" content="Introduction With the ongoing pandemic I absorb statistics about the state of the virus, and to verify this information I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level. The following is some information on the dataset based on its documentation. It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mayaylagan.netlify.app/projects/modelingtestingpredicting/" /><meta property="article:section" content="projects" />
+<meta property="article:published_time" content="2021-01-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-01-01T00:00:00+00:00" /><meta property="og:site_name" content="Maya Ylagan" />
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Modeling, Testing, and Predicting"/>
+<meta name="twitter:description" content="Introduction With the ongoing pandemic I absorb statistics about the state of the virus, and to verify this information I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level. The following is some information on the dataset based on its documentation. It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level."/>
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+
+
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+         
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        width: .5em;
+        height: .5em;
+        background-color: var(--background-color);
+    }
+    
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 6px var(--background-color);
+        border-radius: 1rem;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background-color: var(--secondary-color);
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+<meta name="description" content="">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-5/all-5.15.4.js"></script>
+
+  <title>
+Modeling, Testing, and Predicting | Maya Ylagan
+
+  </title>
+</head>
+
+<body class="light" onload="loading()">
+  
+  
+
+
+
+<header>
+    <nav class="pt-3 navbar navbar-expand-lg animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+            
+            <a class="navbar-brand primary-font text-wrap" href="/">
+                
+                <img src="fa-solid%20fa-square-m" width="30" height="30"
+                    class="d-inline-block align-top">
+                Maya Ylagan
+                
+            </a>
+
+            
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-md-block" placeholder="Search ..."
+                        aria-label="Search" oninput="searchOnChange(event)">
+                </div>
+            
+
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <svg aria-hidden="true" height="24" viewBox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+            
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+                    
+                        <li class="nav-item navbar-text d-block d-md-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="Search ..." aria-label="Search" oninput="searchOnChange(event)">
+                            </div>
+                        </li>
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#about" aria-label="about">
+                            About Me
+                        </a>
+                    </li>
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#experience"
+                            aria-label="experience">
+                            Experience
+                        </a>
+                    </li>
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#education"
+                            aria-label="education">
+                            Education
+                        </a>
+                    </li>
+                    
+
+                    
+
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#contact"
+                            aria-label="contact">
+                            Contact
+                        </a>
+                    </li>
+                    
+
+                    
+                    
+                    
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/projects" title="Projects">
+                            
+                            Projects
+                        </a>
+                    </li>
+                    
+                    
+
+                    
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4">Modeling, Testing, and Predicting</h1>
+            <div class="text-center">
+              Maya Ylagan - SDS348 
+              <small>|</small>
+              Jan 1, 2021
+            </div>
+          </div>
+          
+          <div class="featured-image">
+            <img class="img-fluid" src="/images/test.png" alt="Modeling, Testing, and Predicting">
+          </div>
+          
+          <article class="page-content  p-2">
+          <h1 id="introduction">Introduction</h1>
+<p>With the ongoing pandemic I absorb statistics about the state of the virus, and to verify this information I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level.  The following is some information on the dataset based on its documentation.  It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level.  It contains daily snapshot in time that focuses on recent COVID-19 outcomes in the last seven days and changes relative to the week prior.</p>
+<hr>
+<h1 id="package-and-data-import">Package and Data import</h1>
+<h4 id="packages">Packages</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(tidyverse)
+<span style="color:#a6e22e">library</span>(mvtnorm)
+<span style="color:#a6e22e">library</span>(ggExtra)
+<span style="color:#a6e22e">library</span>(rstatix)
+<span style="color:#a6e22e">library</span>(sandwich)
+<span style="color:#a6e22e">library</span>(lmtest)
+<span style="color:#a6e22e">library</span>(interactions)
+<span style="color:#a6e22e">library</span>(plotROC)
+</code></pre></div><h4 id="data">Data</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">FullCovid <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">read_csv</span>(<span style="color:#e6db74">&#34;COVID-19_Community_Profile_Report_-_County-Level.csv&#34;</span>) 
+CovidData <span style="color:#f92672">&lt;-</span> FullCovid <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">mutate</span>( highCases <span style="color:#f92672">=</span> total_cases<span style="color:#f92672">&gt;</span><span style="color:#a6e22e">median</span>(total_cases,na.rm<span style="color:#f92672">=</span>T) ) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">mutate</span>( region<span style="color:#f92672">=</span><span style="color:#a6e22e">recode</span>(state, ME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, MA<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, RI<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, CT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, NH<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, VT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, NY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, PA<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, NJ<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, DE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, MD<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, DC<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;NE&#34;</span>, PR<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, WV<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, VA<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, KY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, TN<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, NC<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, SC<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, GA<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, AL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, MS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, AR<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, LA<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, FL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SE&#34;</span>, OH<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, IN<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, MI<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, IL<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, MO<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, WI<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, MN<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, IA<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, KS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, NE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, SD<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, ND<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;MW&#34;</span>, TX<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SW&#34;</span>, OK<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SW&#34;</span>, NM<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SW&#34;</span>, AZ<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;SW&#34;</span>, CO<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, WY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, MT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, WA<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, OR<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, UT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, NV<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, CA<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, AK<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>, HI<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;W&#34;</span>) ) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(fips, county, region, highCases, <span style="color:#a6e22e">everything</span>(), <span style="color:#f92672">-</span>state,<span style="color:#f92672">-</span>fema_region)
+</code></pre></div><hr>
+<h1 id="manova">MANOVA</h1>
+<h2 id="manova-1">MANOVA</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">man1<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">manova</span>(<span style="color:#a6e22e">cbind</span>(total_cases,total_deaths, cases_last_7_days, deaths_last_7_days, test_positivity_rate_last_7_days, confirmed_covid_hosp_last_7_days)<span style="color:#f92672">~</span>region, data<span style="color:#f92672">=</span>CovidData)
+<span style="color:#a6e22e">summary</span>(man1)
+</code></pre></div><pre tabindex="0"><code>## Df Pillai approx F num Df den Df Pr(&gt;F)
+## region 4 0.15215 15.882 24 9640 &lt; 2.2e-16 ***
+## Residuals 2412
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+</code></pre><p>*Total cases, total deaths, cases the last 7 days, deaths the last 7 days, test positivity rate the last 7 days, and confirmed covid hospitalizations show a mean difference across different regions of the US. *</p>
+<h3 id="univariate-anovas">Univariate ANOVAs</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">summary.aov</span>(man1)
+</code></pre></div><pre tabindex="0"><code>## Response total_cases :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## region 4 7.0150e+10 1.7538e+10 19.705 5.634e-16 ***
+## Residuals 2412 2.1467e+12 8.8999e+08
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+##
+## Response total_deaths :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## region 4 52634377 13158594 39.151 &lt; 2.2e-16 ***
+## Residuals 2412 810675863 336101
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+##
+## Response cases_last_7_days :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## region 4 24209477 6052369 30.236 &lt; 2.2e-16 ***
+## Residuals 2412 482815519 200172
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+##
+## Response deaths_last_7_days :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## region 4 3715 928.81 26.256 &lt; 2.2e-16 ***
+## Residuals 2412 85324 35.37
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+##
+## Response test_positivity_rate_last_7_days :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## region 4 0.0651 0.0162849 8.5578 7.436e-07 ***
+## Residuals 2412 4.5899 0.0019029
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+##
+## Response confirmed_covid_hosp_last_7_days :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## region 4 195759 48940 23.928 &lt; 2.2e-16 ***
+## Residuals 2412 4933260 2045
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+##
+## 855 observations deleted due to missingness
+</code></pre><p><em>Each of the afore mentioned predictor variables illustrate a mean difference across groups</em></p>
+<h3 id="post-hoc-t-tests">Post-hoc t-tests</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Total Cases</span>
+<span style="color:#a6e22e">pairwise.t.test</span>(CovidData<span style="color:#f92672">$</span>total_cases, CovidData<span style="color:#f92672">$</span>region, p.adj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span>)<span style="color:#f92672">$</span>p.value<span style="color:#f92672">*</span><span style="color:#ae81ff">67</span> <span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0.05</span>
+</code></pre></div><pre tabindex="0"><code>##       MW    NE    SE   SW
+## NE FALSE    NA    NA   NA
+## SE  TRUE FALSE    NA   NA
+## SW  TRUE FALSE  TRUE   NA
+## W  FALSE  TRUE FALSE TRUE
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Total Deaths</span>
+<span style="color:#a6e22e">pairwise.t.test</span>(CovidData<span style="color:#f92672">$</span>total_deaths, CovidData<span style="color:#f92672">$</span>region, p.adj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span>)<span style="color:#f92672">$</span>p.value <span style="color:#f92672">*</span><span style="color:#ae81ff">67</span> <span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0.05</span>
+</code></pre></div><pre tabindex="0"><code>##       MW    NE   SE   SW
+## NE FALSE    NA   NA   NA
+## SE  TRUE FALSE   NA   NA
+## SW  TRUE FALSE TRUE   NA
+## W   TRUE FALSE TRUE TRUE
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Cases in the Last 7 Days</span>
+<span style="color:#a6e22e">pairwise.t.test</span>(CovidData<span style="color:#f92672">$</span>cases_last_7_days, CovidData<span style="color:#f92672">$</span>region, p.adj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span>)<span style="color:#f92672">$</span>p.value <span style="color:#f92672">*</span><span style="color:#ae81ff">67</span> <span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0.05</span>
+</code></pre></div><pre tabindex="0"><code>##       MW    NE   SE   SW
+## NE FALSE    NA   NA   NA
+## SE  TRUE FALSE   NA   NA
+## SW  TRUE FALSE TRUE   NA
+## W   TRUE FALSE TRUE TRUE
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Deaths int the Last 7 Days</span>
+<span style="color:#a6e22e">pairwise.t.test</span>(CovidData<span style="color:#f92672">$</span>deaths_last_7_days, CovidData<span style="color:#f92672">$</span>region, p.adj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span>)<span style="color:#f92672">$</span>p.value <span style="color:#f92672">*</span><span style="color:#ae81ff">67</span> <span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0.05</span>
+</code></pre></div><pre tabindex="0"><code>##       MW    NE   SE   SW
+## NE FALSE    NA   NA   NA
+## SE  TRUE FALSE   NA   NA
+## SW  TRUE FALSE TRUE   NA
+## W   TRUE FALSE TRUE TRUE
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Test Positivity Rate in the Last 7 Days</span>
+<span style="color:#a6e22e">pairwise.t.test</span>(CovidData<span style="color:#f92672">$</span>test_positivity_rate_last_7_days, CovidData<span style="color:#f92672">$</span>region, p.adj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span>)<span style="color:#f92672">$</span>p.value <span style="color:#f92672">*</span><span style="color:#ae81ff">67</span> <span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0.05</span>
+</code></pre></div><pre tabindex="0"><code>##       MW    NE    SE   SW
+## NE  TRUE    NA    NA   NA
+## SE FALSE FALSE    NA   NA
+## SW FALSE  TRUE FALSE   NA
+## W   TRUE  TRUE FALSE TRUE
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Confirmed Covid Hospitalization in the last 7 Days</span>
+<span style="color:#a6e22e">pairwise.t.test</span>(CovidData<span style="color:#f92672">$</span>confirmed_covid_hosp_last_7_days, CovidData<span style="color:#f92672">$</span>region, p.adj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span>)<span style="color:#f92672">$</span>p.value <span style="color:#f92672">*</span><span style="color:#ae81ff">67</span> <span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0.05</span>
+</code></pre></div><pre tabindex="0"><code>##       MW    NE   SE   SW
+## NE FALSE    NA   NA   NA
+## SE  TRUE FALSE   NA   NA
+## SW  TRUE FALSE TRUE   NA
+## W   TRUE FALSE TRUE TRUE
+</code></pre><p><em>The above matricies illustrate which group means significantly differ by region and by predictor variable (accounting for the change in significance level mentioned below)</em></p>
+<h2 id="significance-level-α">Significance level (α):</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span>(<span style="color:#ae81ff">0.95</span>)^67
+</code></pre></div><pre tabindex="0"><code>## [1] 0.9678277
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#ae81ff">0.05</span><span style="color:#f92672">/</span><span style="color:#ae81ff">67</span>
+</code></pre></div><pre tabindex="0"><code>## [1] 0.0007462687
+</code></pre><p><em>With 6 numeric predictors and 5 catagorical groups, 67 inference tests were done.  This creates a 96.8% chance of having a Type-1 Error.  Thus a Bonferroni correction will be done to reduce the 0.05 signifcance level to 0.00075 (7.5e-4).</em></p>
+<h2 id="manova-assumptions">MANOVA assumptions</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">group <span style="color:#f92672">&lt;-</span> CovidData <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">na.omit</span>() <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(region) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>(region <span style="color:#f92672">=</span> <span style="color:#a6e22e">as.factor</span>(region))
+DVs <span style="color:#f92672">&lt;-</span> CovidData <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">na.omit</span>() <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(total_cases,total_deaths, cases_last_7_days, deaths_last_7_days, test_positivity_rate_last_7_days, confirmed_covid_hosp_last_7_days) 
+
+<span style="color:#75715e">#Test multivariate normality for each group (null: normality met)</span>
+<span style="color:#a6e22e">sapply</span>(<span style="color:#a6e22e">split</span>(DVs,group), mshapiro_test)
+</code></pre></div><pre tabindex="0"><code>## MW NE SE SW W
+## statistic 0.3448927 0.6079596 0.4318576 0.3509059
+0.2546133
+## p.value 2.090146e-26 1.314466e-17 1.098895e-28
+1.170625e-16 3.080355e-16
+</code></pre><p>*The MANOVA fails the first assumption of normality, the other many other assumptions to check that are harder to meet such as Homogeneity of within-group covariance, Linear relationships among DVs, and the absense of outliers. *</p>
+<hr>
+<h1 id="randomization-test">Randomization test</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">randData <span style="color:#f92672">&lt;-</span> CovidData <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">na.omit</span>() <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(test_positivity_rate_last_7_days,cases_last_7_days)
+sampleCor <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">cor</span>(randData<span style="color:#f92672">$</span>test_positivity_rate_last_7_days, randData<span style="color:#f92672">$</span>cases_last_7_days)
+
+rand_dist<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">vector</span>()
+<span style="color:#a6e22e">for</span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5000</span>){
+  new<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">data.frame</span>(positives<span style="color:#f92672">=</span><span style="color:#a6e22e">sample</span>(randData<span style="color:#f92672">$</span>test_positivity_rate_last_7_days),cases<span style="color:#f92672">=</span>randData<span style="color:#f92672">$</span>cases_last_7_days) 
+  rand_dist[i]<span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">cor</span>(new<span style="color:#f92672">$</span>positives, new<span style="color:#f92672">$</span>cases)
+}
+
+<span style="color:#a6e22e">ggplot</span>( <span style="color:#a6e22e">data.frame</span>(rand_dist), <span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>rand_dist) ) <span style="color:#f92672">+</span> 
+  <span style="color:#a6e22e">geom_histogram</span>() <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_vline</span>(<span style="color:#a6e22e">aes</span>(xintercept<span style="color:#f92672">=</span>sampleCor), color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>)
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/modelingtestingpredicting/index_files/figure-html/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;" />
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pval <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">mean</span>(rand_dist<span style="color:#f92672">&gt;</span>sampleCor <span style="color:#f92672">|</span> rand_dist <span style="color:#f92672">&lt;</span> <span style="color:#f92672">-</span>sampleCor)
+pval
+</code></pre></div><pre tabindex="0"><code>## [1] 0
+</code></pre><p>*The Null Hypothesis is that there is no correlation between positive test rate in the past 7 days and the number of cases the past 7 days.  The null distribution of the correlation coefficient is illustrated in dark grey, and the in-sample correlation coefficient is the red vertical line.  The probability of a value as extreme as the in-sample value under this &ldquo;randomization distribution&rdquo; is 0, therefore we reject the null hypothesis that there is no correlation between these 2 variables. *</p>
+<hr>
+<h1 id="linear-regression-model">Linear Regression Model:</h1>
+<h3 id="creating-and-interpreting">Creating and Interpreting</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lmData <span style="color:#f92672">&lt;-</span> CovidData <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>( cases_last_7_days, test_positivity_rate_last_7_days, confirmed_covid_hosp_last_7_days ) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">mutate</span>( posRate <span style="color:#f92672">=</span> test_positivity_rate_last_7_days<span style="color:#f92672">-</span><span style="color:#a6e22e">mean</span>(test_positivity_rate_last_7_days,na.rm<span style="color:#f92672">=</span>T) ) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">mutate</span>( confirmHosp <span style="color:#f92672">=</span> confirmed_covid_hosp_last_7_days<span style="color:#f92672">-</span><span style="color:#a6e22e">mean</span>(CovidData<span style="color:#f92672">$</span>confirmed_covid_hosp_last_7_days,na.rm<span style="color:#f92672">=</span>T) )
+
+
+fit<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">lm</span>(cases_last_7_days<span style="color:#f92672">~</span>posRate<span style="color:#f92672">*</span>confirmHosp, data<span style="color:#f92672">=</span>lmData)
+<span style="color:#a6e22e">summary</span>(fit)
+</code></pre></div><pre tabindex="0"><code>##
+## Call:
+## lm(formula = cases_last_7_days ~ posRate * confirmHosp,
+data = lmData)
+##
+## Residuals:
+## Min 1Q Median 3Q Max
+## -2039.63 -33.24 -14.33 1.47 2708.79
+##
+## Coefficients:
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 152.9680 3.9324 38.899 &lt; 2e-16 ***
+## posRate 431.0901 90.5095 4.763 2.02e-06 ***
+## confirmHosp 8.6846 0.1005 86.457 &lt; 2e-16 ***
+## posRate:confirmHosp 11.9381 2.1726 5.495 4.32e-08 ***
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+##
+## Residual standard error: 192.2 on 2413 degrees of
+freedom
+## (855 observations deleted due to missingness)
+## Multiple R-squared: 0.8242, Adjusted R-squared: 0.824
+## F-statistic: 3771 on 3 and 2413 DF, p-value: &lt; 2.2e-16
+</code></pre><p><em>Given average test positivity rate over the last 7 days and average confirmed covid hospitalizations over the last 7 days the predicted value of cases the last 7 days is 398.7656 cases</em></p>
+<p><em>1197.4981 is the slope for test positivity rate over the last 7 days on cases the last 7 days while holding confirmed covid hospitalizations over the last 7 days constant</em></p>
+<p><em>8.5943 is the slope for confirmed covid hospitalizations over the last 7 days on cases the last 7 days while holding test positivity rate over the last 7 days constant</em></p>
+<p><em>The effect of positivity rate over the last 7 days is 10.5941 cases higher for every percent above the mean positivity rate over the last 7 days</em></p>
+<p>*This linear model explain 81.42% of varience in cases the last 7 days *</p>
+<h3 id="plot-of-the-interaction">Plot of the Interaction</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">interact_plot</span>(fit, confirmHosp, posRate, plot.points <span style="color:#f92672">=</span> T)
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/modelingtestingpredicting/index_files/figure-html/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;" />
+<h3 id="linear-model-assumptions">Linear Model Assumptions</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Normality</span>
+<span style="color:#a6e22e">shapiro.test</span>(fit<span style="color:#f92672">$</span>residuals) <span style="color:#75715e">#H0: true distribution is normal</span>
+</code></pre></div><pre tabindex="0"><code>## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  fit$residuals
+## W = 0.49026, p-value &lt; 2.2e-16
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#Homoskedasticity</span>
+<span style="color:#a6e22e">ggplot</span>() <span style="color:#f92672">+</span> <span style="color:#a6e22e">geom_point</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>fit<span style="color:#f92672">$</span>fitted.values,y<span style="color:#f92672">=</span>fit<span style="color:#f92672">$</span>residuals))
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/modelingtestingpredicting/index_files/figure-html/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" />
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">bptest</span>(fit) <span style="color:#75715e"># H0: homoskedastic</span>
+</code></pre></div><pre tabindex="0"><code>## 
+## 	studentized Breusch-Pagan test
+## 
+## data:  fit
+## BP = 979.38, df = 3, p-value &lt; 2.2e-16
+</code></pre><p>*This linear model fails normality and homoscedasticity *</p>
+<h3 id="robust-standard-errors">Robust standard errors</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">coeftest</span>(fit, vcov<span style="color:#f92672">=</span><span style="color:#a6e22e">vcovHC</span>(fit))
+</code></pre></div><pre tabindex="0"><code>##
+## t test of coefficients:
+##
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 152.96796 5.23374 29.2273 &lt; 2e-16 ***
+## posRate 431.09008 170.74945 2.5247 0.01164 *
+## confirmHosp 8.68462 0.69314 12.5295 &lt; 2e-16 ***
+## posRate:confirmHosp 11.93807 14.54385 0.8208 0.41182
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+</code></pre><p><em>Because the model failed homoskeydacity robust SE were used  The robust SE changed the significance of the interaction, increased the positivity rate p-value,  but not above 0.05, and decreased all t values.</em></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">samp_distn<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">replicate</span>(<span style="color:#ae81ff">5000</span>, {  
+  boot_dat <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sample_frac</span>(lmData, replace<span style="color:#f92672">=</span>T) <span style="color:#75715e">#take bootstrap sample of rows  </span>
+  bootfit <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">lm</span>(cases_last_7_days<span style="color:#f92672">~</span>posRate<span style="color:#f92672">*</span>confirmHosp, data<span style="color:#f92672">=</span>boot_dat) <span style="color:#75715e">#fit model on bootstrap sample  </span>
+  <span style="color:#a6e22e">coef</span>(bootfit) <span style="color:#75715e">#save coefs</span>
+}) 
+
+samp_distn <span style="color:#f92672">%&gt;%</span> t <span style="color:#f92672">%&gt;%</span> as.data.frame <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">summarize_all</span>(sd)
+</code></pre></div><pre tabindex="0"><code>##   (Intercept)  posRate confirmHosp posRate:confirmHosp
+## 1    5.089489 165.9404   0.6335873            14.72913
+</code></pre><p><em>The bootstrapped SEs are very similar to robust SE and much higher than the original SE, illustrating the robust SE are a more accurate measure of the sample than than the original SE</em></p>
+<hr>
+<h1 id="logistic-regression-models">Logistic Regression Models:</h1>
+<h2 id="logistic-model-with-2-predictors">Logistic Model with 2 predictors</h2>
+<h3 id="creating-and-interpreting-1">Creating and Interpreting</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">fit2 <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">glm</span>(highCases<span style="color:#f92672">~</span>cases_last_7_days<span style="color:#f92672">+</span>total_deaths, data<span style="color:#f92672">=</span>CovidData, family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>)
+<span style="color:#a6e22e">summary</span>(fit2)
+</code></pre></div><pre tabindex="0"><code>##
+## Call:
+## glm(formula = highCases ~ cases_last_7_days +
+total_deaths, family = &quot;binomial&quot;,
+## data = CovidData)
+##
+## Deviance Residuals:
+## Min 1Q Median 3Q Max
+## -8.4904 -0.4091 -0.0024 0.1299 6.7658
+##
+## Coefficients:
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) -3.810729 0.137967 -27.62 &lt;2e-16 ***
+## cases_last_7_days 0.036071 0.002675 13.48 &lt;2e-16 ***
+## total_deaths 0.055663 0.002484 22.41 &lt;2e-16 ***
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
+##
+## (Dispersion parameter for binomial family taken to be 1)
+##
+## Null deviance: 4534.6 on 3270 degrees of freedom
+## Residual deviance: 1585.5 on 3268 degrees of freedom
+## (1 observation deleted due to missingness)
+## AIC: 1591.5
+##
+## Number of Fisher Scoring iterations: 11
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">exp</span>(fit2<span style="color:#f92672">$</span>coefficients)
+</code></pre></div><pre tabindex="0"><code>##       (Intercept) cases_last_7_days      total_deaths 
+##        0.02213204        1.03672930        1.05724118
+</code></pre><p><em>Given the above model&rsquo;s coefficients: for every 1 unit increase in cases in the last 7 days the odds of highCases incrase by 1.01, and for every 1 unit increase in total deaths the odss of highCases increase by 1.02</em></p>
+<h3 id="confusion-matrix">Confusion Matrix</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">CovidData <span style="color:#f92672">&lt;-</span> CovidData <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">filter</span>( <span style="color:#a6e22e">complete.cases</span>(CovidData<span style="color:#f92672">$</span>highCases),<span style="color:#a6e22e">complete.cases</span>(CovidData<span style="color:#f92672">$</span>cases_last_7_days),<span style="color:#a6e22e">complete.cases</span>(CovidData<span style="color:#f92672">$</span>total_deaths) )
+
+<span style="color:#a6e22e">table</span>(Predicted <span style="color:#f92672">=</span> (<span style="color:#a6e22e">predict</span>(fit2,type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;response&#34;</span>)<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0.5</span>) , Actual <span style="color:#f92672">=</span> <span style="color:#a6e22e">as.numeric</span>(CovidData<span style="color:#f92672">$</span>highCases)) <span style="color:#f92672">%&gt;%</span> addmargins
+</code></pre></div><pre tabindex="0"><code>##          Actual
+## Predicted    0    1  Sum
+##     FALSE 1538  200 1738
+##     TRUE    98 1435 1533
+##     Sum   1636 1635 3271
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">class_diag<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">function</span>(probs,truth){
+  
+  tab<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">table</span>(<span style="color:#a6e22e">factor</span>(probs<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">.5</span>,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;FALSE&#34;</span>,<span style="color:#e6db74">&#34;TRUE&#34;</span>)),truth)
+  acc<span style="color:#f92672">=</span><span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">diag</span>(tab))<span style="color:#f92672">/</span><span style="color:#a6e22e">sum</span>(tab)
+  sens<span style="color:#f92672">=</span>tab[2,<span style="color:#ae81ff">2</span>]<span style="color:#f92672">/</span><span style="color:#a6e22e">colSums</span>(tab)[2]
+  spec<span style="color:#f92672">=</span>tab[1,<span style="color:#ae81ff">1</span>]<span style="color:#f92672">/</span><span style="color:#a6e22e">colSums</span>(tab)[1]
+  ppv<span style="color:#f92672">=</span>tab[2,<span style="color:#ae81ff">2</span>]<span style="color:#f92672">/</span><span style="color:#a6e22e">rowSums</span>(tab)[2]
+
+  <span style="color:#a6e22e">if</span>(<span style="color:#a6e22e">is.numeric</span>(truth)<span style="color:#f92672">==</span><span style="color:#66d9ef">FALSE</span> <span style="color:#f92672">&amp;</span> <span style="color:#a6e22e">is.logical</span>(truth)<span style="color:#f92672">==</span><span style="color:#66d9ef">FALSE</span>) truth<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">as.numeric</span>(truth)<span style="color:#ae81ff">-1</span>
+  
+  <span style="color:#75715e">#CALCULATE EXACT AUC</span>
+  ord<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">order</span>(probs, decreasing<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)
+  probs <span style="color:#f92672">&lt;-</span> probs[ord]; truth <span style="color:#f92672">&lt;-</span> truth[ord]
+  
+  TPR<span style="color:#f92672">=</span><span style="color:#a6e22e">cumsum</span>(truth)<span style="color:#f92672">/</span><span style="color:#a6e22e">max</span>(<span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">sum</span>(truth)) 
+  FPR<span style="color:#f92672">=</span><span style="color:#a6e22e">cumsum</span>(<span style="color:#f92672">!</span>truth)<span style="color:#f92672">/</span><span style="color:#a6e22e">max</span>(<span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">sum</span>(<span style="color:#f92672">!</span>truth))
+  
+  dup<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">c</span>(probs[<span style="color:#ae81ff">-1</span>]<span style="color:#f92672">&gt;=</span>probs[<span style="color:#f92672">-</span><span style="color:#a6e22e">length</span>(probs)], <span style="color:#66d9ef">FALSE</span>)
+  TPR<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">0</span>,TPR[<span style="color:#f92672">!</span>dup],<span style="color:#ae81ff">1</span>); FPR<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">0</span>,FPR[<span style="color:#f92672">!</span>dup],<span style="color:#ae81ff">1</span>)
+  
+  n <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">length</span>(TPR)
+  auc<span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sum</span>( ((TPR[<span style="color:#ae81ff">-1</span>]<span style="color:#f92672">+</span>TPR[<span style="color:#f92672">-</span>n])<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">*</span> (FPR[<span style="color:#ae81ff">-1</span>]<span style="color:#f92672">-</span>FPR[<span style="color:#f92672">-</span>n]) )
+
+  <span style="color:#a6e22e">data.frame</span>(acc,sens,spec,ppv,auc)
+}
+
+probs <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">predict</span>(fit2)
+
+<span style="color:#a6e22e">class_diag</span>(probs, CovidData<span style="color:#f92672">$</span>highCases)
+</code></pre></div><pre tabindex="0"><code>##            acc      sens      spec       ppv       auc
+## TRUE 0.8994191 0.8348624 0.9639364 0.9585674 0.9720858
+</code></pre><p><em>See the above table and confusion matrix for diagnostic values of the logistic model with 2 predictors</em></p>
+<h3 id="density-plot">Density Plot</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">densityVal <span style="color:#f92672">&lt;-</span> CovidData <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>(logit<span style="color:#f92672">=</span>fit2<span style="color:#f92672">$</span>fitted.values )
+
+<span style="color:#a6e22e">ggplot</span>(densityVal, <span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>logit, fill<span style="color:#f92672">=</span>highCases)) <span style="color:#f92672">+</span> <span style="color:#a6e22e">geom_density</span>(alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">.5</span>)
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/modelingtestingpredicting/index_files/figure-html/unnamed-chunk-16-1.png" width="768" style="display: block; margin: auto;" />
+*The above density plot illustrates the predictor value (logit) compared to the actual group membership to highCases*
+<h3 id="roc-and-auc">ROC and AUC</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">ROCplot<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ggplot</span>(CovidData)<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_roc</span>(<span style="color:#a6e22e">aes</span>(d<span style="color:#f92672">=</span>highCases,m<span style="color:#f92672">=</span>cases_last_7_days<span style="color:#f92672">+</span>total_deaths), n.cuts<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>) 
+ROCplot
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/modelingtestingpredicting/index_files/figure-html/unnamed-chunk-17-1.png" width="768" style="display: block; margin: auto;" />
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">calc_auc</span>(ROCplot)
+</code></pre></div><pre tabindex="0"><code>##   PANEL group       AUC
+## 1     1    -1 0.9704336
+</code></pre><p>*The above ROC curve is of the logistic model with 2 predictors. Based on the shape of the ROC curve and the AUC of the aforementioned curve, the classification of this 2 predictor logistical model is very good. *</p>
+<h2 id="logistic-model-with-all-predictors">Logistic Model with all predictors</h2>
+<h3 id="creating-and-interpreting-2">Creating and Interpreting</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">lassoData <span style="color:#f92672">&lt;-</span> CovidData <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(<span style="color:#f92672">-</span>fips, <span style="color:#f92672">-</span>county,<span style="color:#f92672">-</span>date) <span style="color:#f92672">%&gt;%</span> na.omit
+fit3 <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">lm</span>(highCases<span style="color:#f92672">~</span>(.), data<span style="color:#f92672">=</span>lassoData)
+probs <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">predict</span>(fit3,data<span style="color:#f92672">=</span>CovidData)
+<span style="color:#a6e22e">class_diag</span>(probs, lassoData<span style="color:#f92672">$</span>highCases)
+</code></pre></div><pre tabindex="0"><code>##            acc sens       spec       ppv       auc
+## TRUE 0.9338624    1 0.01960784 0.9337748 0.9359477
+</code></pre><p>*From including all variables the model was made more flexible, but had lower values for Accuracy, Sensitivity, and AUC, as there was more noise introduced. *</p>
+<h3 id="10-fold-cross-validation">10 Fold Cross Validation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">k<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+
+cvData<span style="color:#f92672">&lt;-</span>lassoData<span style="color:#a6e22e">[sample</span>(<span style="color:#a6e22e">nrow</span>(lassoData)),] <span style="color:#75715e">#randomly order rows</span>
+folds<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">cut</span>(<span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#a6e22e">nrow</span>(lassoData)),breaks<span style="color:#f92672">=</span>k,labels<span style="color:#f92672">=</span>F) <span style="color:#75715e">#create folds</span>
+
+diags<span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">NULL</span>
+<span style="color:#a6e22e">for</span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>k){
+  <span style="color:#75715e">## Create training and test sets  </span>
+  train<span style="color:#f92672">&lt;-</span>cvData[folds<span style="color:#f92672">!=</span>i,]   
+  test<span style="color:#f92672">&lt;-</span>cvData[folds<span style="color:#f92672">==</span>i,]  
+  truth<span style="color:#f92672">&lt;-</span>test<span style="color:#f92672">$</span>highCases <span style="color:#75715e">## Truth labels for fold i</span>
+  
+  <span style="color:#75715e">## Train model on training set (all but fold i)  </span>
+  lassofit<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">glm</span>(highCases<span style="color:#f92672">~</span>(.),data<span style="color:#f92672">=</span>train,family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>)
+  
+  <span style="color:#75715e">## Test model on test set (fold i)   </span>
+  probs<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">predict</span>(lassofit,newdata <span style="color:#f92672">=</span> test,type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;response&#34;</span>)
+  
+  <span style="color:#75715e">## Get diagnostics for fold i  </span>
+  diags<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rbind</span>(diags,<span style="color:#a6e22e">class_diag</span>(probs,truth))
+}
+
+<span style="color:#a6e22e">summarize_all</span>(diags,mean) <span style="color:#75715e">#average diagnostics across all k folds</span>
+</code></pre></div><pre tabindex="0"><code>##         acc      sens      spec      ppv       auc
+## 1 0.9590175 0.9754735 0.7611111 0.979892 0.9294254
+</code></pre><p>*There is no sign of overfitting the more flexible model, with all predictors, as the AUC in 10 Fold Cross Validation was surprisingly higher for out-of-sample AUC than for the in-sample AUC. *</p>
+<h3 id="lasso">LASSO</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(glmnet)
+
+y<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">as.matrix</span>(lassoData<span style="color:#f92672">$</span>highCases) <span style="color:#75715e">#grab response</span>
+x<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">model.matrix</span>(highCases<span style="color:#f92672">~</span>(.),data<span style="color:#f92672">=</span>lassoData)[,<span style="color:#ae81ff">-1</span>] <span style="color:#75715e">#grab predictors</span>
+
+cv<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">cv.glmnet</span>(x,y,family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>)
+lasso<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">glmnet</span>(x,y,family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>,lambda<span style="color:#f92672">=</span>cv<span style="color:#f92672">$</span>lambda.1se)
+<span style="color:#a6e22e">coef</span>(lasso)
+</code></pre></div><pre tabindex="0"><code>## 37 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+## s0
+## (Intercept) -1.121187e+01
+## regionNE 8.376228e-01
+## regionSE .
+## regionSW 3.722346e+00
+## regionW 1.979631e+00
+## cases_last_7_days .
+## cases_per_100k_last_7_days 7.447299e-04
+## total_cases 1.509893e-03
+## cases_pct_change_from_prev_week -3.386404e-01
+## deaths_last_7_days .
+## deaths_per_100k_last_7_days -1.526895e-02
+## total_deaths 3.617703e-02
+## deaths_pct_change_from_prev_week -4.426833e-01
+## test_positivity_rate_last_7_days 1.204992e+00
+## total_positive_tests_last_7_days .
+## total_tests_last_7_days 4.148794e-04
+## total_tests_per_100k_last_7_days -8.519364e-05
+## test_positivity_rate_pct_change_from_prev_week
+1.664024e+00
+## total_tests_pct_change_from_prev_week -3.713298e-01
+## confirmed_covid_hosp_last_7_days -1.459353e-02
+## confirmed_covid_hosp_per_100_beds_last_7_days
+7.577035e-03
+##
+confirmed_covid_hosp_per_100_beds_pct_change_from_prev_week
+3.900104e-01
+## suspected_covid_hosp_last_7_days -1.631719e-02
+## suspected_covid_hosp_per_100_beds_last_7_days
+4.364488e-03
+##
+suspected_covid_hosp_per_100_beds_pct_change_from_prev_week
+-8.749300e-02
+## pct_inpatient_beds_used_avg_last_7_days 6.894008e-01
+## pct_inpatient_beds_used_abs_change_from_prev_week
+-2.224784e+00
+## pct_inpatient_beds_used_covid_avg_last_7_days .
+## pct_inpatient_beds_used_covid_abs_change_from_prev_week
+.
+## pct_icu_beds_used_avg_last_7_days 2.861930e+00
+## pct_icu_beds_used_abs_change_from_prev_week 1.775112e+00
+## pct_icu_beds_used_covid_avg_last_7_days -6.346816e+00
+## pct_icu_beds_used_covid_abs_change_from_prev_week
+-1.956639e-01
+## pct_vents_used_avg_last_7_days 3.529052e+00
+## pct_vents_used_abs_change_from_prev_week -2.517949e+00
+## pct_vents_used_covid_avg_last_7_days 1.073789e+01
+## pct_vents_used_covid_abs_change_from_prev_week
+-1.690754e+00
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">newLassoData <span style="color:#f92672">&lt;-</span> lassoData <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>(regionNE<span style="color:#f92672">=</span>(region<span style="color:#f92672">==</span><span style="color:#e6db74">&#34;NE&#34;</span>))  <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>(regionSW<span style="color:#f92672">=</span>(region<span style="color:#f92672">==</span><span style="color:#e6db74">&#34;SW&#34;</span>)) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>(regionSE<span style="color:#f92672">=</span>(region<span style="color:#f92672">==</span><span style="color:#e6db74">&#34;SE&#34;</span>))
+
+lassoSelectedVarFunction <span style="color:#f92672">&lt;-</span> highCases<span style="color:#f92672">~</span>regionNE<span style="color:#f92672">+</span>
+                  regionSE<span style="color:#f92672">+</span>
+                  regionSW<span style="color:#f92672">+</span>
+                  cases_per_100k_last_7_days<span style="color:#f92672">+</span>
+                  total_cases<span style="color:#f92672">+</span>
+                  cases_pct_change_from_prev_week<span style="color:#f92672">+</span>
+                  deaths_per_100k_last_7_days<span style="color:#f92672">+</span>
+                  deaths_pct_change_from_prev_week<span style="color:#f92672">+</span>
+                  test_positivity_rate_last_7_days<span style="color:#f92672">+</span>
+                  test_positivity_rate_pct_change_from_prev_week<span style="color:#f92672">+</span>
+                  total_tests_pct_change_from_prev_week<span style="color:#f92672">+</span>
+                  confirmed_covid_hosp_per_100_beds_last_7_days<span style="color:#f92672">+</span>
+                  confirmed_covid_hosp_per_100_beds_pct_change_from_prev_week<span style="color:#f92672">+</span>
+                  suspected_covid_hosp_last_7_days<span style="color:#f92672">+</span>
+                  suspected_covid_hosp_per_100_beds_pct_change_from_prev_week<span style="color:#f92672">+</span>
+                  pct_inpatient_beds_used_avg_last_7_days<span style="color:#f92672">+</span>
+                  pct_inpatient_beds_used_covid_avg_last_7_days<span style="color:#f92672">+</span>
+                  pct_inpatient_beds_used_covid_abs_change_from_prev_week<span style="color:#f92672">+</span>
+                  pct_icu_beds_used_avg_last_7_days<span style="color:#f92672">+</span>
+                  pct_icu_beds_used_abs_change_from_prev_week<span style="color:#f92672">+</span>
+                  pct_icu_beds_used_covid_avg_last_7_days<span style="color:#f92672">+</span>
+                  pct_icu_beds_used_covid_abs_change_from_prev_week<span style="color:#f92672">+</span>
+                  pct_vents_used_avg_last_7_days<span style="color:#f92672">+</span>
+                  pct_vents_used_covid_abs_change_from_prev_week
+</code></pre></div><p><em>The variables that were selected by LASSO were those that increased the ability of the model to predict highCases and did not add extra noise in the data for the model to learn.</em></p>
+<h3 id="cv-with-lasso-vars">CV with LASSO Vars</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">######## IN-SAMPLE ########</span>
+fitLasso <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">glm</span>(lassoSelectedVarFunction, data<span style="color:#f92672">=</span>newLassoData)
+probs <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">predict</span>(fitLasso)
+<span style="color:#a6e22e">class_diag</span>(probs, newLassoData<span style="color:#f92672">$</span>highCases)
+</code></pre></div><pre tabindex="0"><code>##            acc sens       spec       ppv      auc
+## TRUE 0.9338624    1 0.01960784 0.9337748 0.922848
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">######## OUT-OF-SAMPLE ########</span>
+k<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+cvData<span style="color:#f92672">&lt;-</span>newLassoData<span style="color:#a6e22e">[sample</span>(<span style="color:#a6e22e">nrow</span>(newLassoData)),] <span style="color:#75715e">#randomly order rows</span>
+folds<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">cut</span>(<span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#a6e22e">nrow</span>(newLassoData)),breaks<span style="color:#f92672">=</span>k,labels<span style="color:#f92672">=</span>F) <span style="color:#75715e">#create folds</span>
+
+diags<span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">NULL</span>
+<span style="color:#a6e22e">for</span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>k){
+  <span style="color:#75715e">## Create training and test sets  </span>
+  train<span style="color:#f92672">&lt;-</span>cvData[folds<span style="color:#f92672">!=</span>i,]   
+  test<span style="color:#f92672">&lt;-</span>cvData[folds<span style="color:#f92672">==</span>i,]  
+  truth<span style="color:#f92672">&lt;-</span>test<span style="color:#f92672">$</span>highCases <span style="color:#75715e">## Truth labels for fold i</span>
+ 
+  lassofit<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">glm</span>(lassoSelectedVarFunction,data<span style="color:#f92672">=</span>train,family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>)  <span style="color:#75715e">## Train model on training set (all but fold i)  </span>
+  probs<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">predict</span>(lassofit,newdata <span style="color:#f92672">=</span> test,type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;response&#34;</span>) <span style="color:#75715e">## Test model on test set (fold i)   </span>
+  diags<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rbind</span>(diags,<span style="color:#a6e22e">class_diag</span>(probs,truth))  <span style="color:#75715e">## Get diagnostics for fold i</span>
+}
+
+<span style="color:#a6e22e">summarize_all</span>(diags,mean) <span style="color:#75715e">#average diagnostics across all k folds</span>
+</code></pre></div><pre tabindex="0"><code>##         acc      sens      spec       ppv       auc
+## 1 0.9682456 0.9886213 0.7014286 0.9775247 0.9700973
+</code></pre><p><em>Using the variables that LASSO selected, the model&rsquo;s out-of-sample AUC is higher than the model&rsquo;s in-sample AUC</em></p>
+
+          </article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div class="sticky-sidebar">
+          
+          <aside class="toc">
+              <h5>
+                Table Of Contents
+              </h5>
+              <div class="toc-content">
+                <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#manova-1">MANOVA</a>
+      <ul>
+        <li><a href="#univariate-anovas">Univariate ANOVAs</a></li>
+        <li><a href="#post-hoc-t-tests">Post-hoc t-tests</a></li>
+      </ul>
+    </li>
+    <li><a href="#significance-level-α">Significance level (α):</a></li>
+    <li><a href="#manova-assumptions">MANOVA assumptions</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#creating-and-interpreting">Creating and Interpreting</a></li>
+        <li><a href="#plot-of-the-interaction">Plot of the Interaction</a></li>
+        <li><a href="#linear-model-assumptions">Linear Model Assumptions</a></li>
+        <li><a href="#robust-standard-errors">Robust standard errors</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#logistic-model-with-2-predictors">Logistic Model with 2 predictors</a>
+      <ul>
+        <li><a href="#creating-and-interpreting-1">Creating and Interpreting</a></li>
+        <li><a href="#confusion-matrix">Confusion Matrix</a></li>
+        <li><a href="#density-plot">Density Plot</a></li>
+        <li><a href="#roc-and-auc">ROC and AUC</a></li>
+      </ul>
+    </li>
+    <li><a href="#logistic-model-with-all-predictors">Logistic Model with all predictors</a>
+      <ul>
+        <li><a href="#creating-and-interpreting-2">Creating and Interpreting</a></li>
+        <li><a href="#10-fold-cross-validation">10 Fold Cross Validation</a></li>
+        <li><a href="#lasso">LASSO</a></li>
+        <li><a href="#cv-with-lasso-vars">CV with LASSO Vars</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+              </div>
+          </aside>
+          
+
+          
+
+          
+          <aside class="social">
+            <h5>Social</h5>
+            <div class="social-content">
+              <ul class="list-inline">
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://twitter.com/share?text=Modeling%2c%20Testing%2c%20and%20Predicting&url=https%3a%2f%2fmayaylagan.netlify.app%2fprojects%2fmodelingtestingpredicting%2f">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://api.whatsapp.com/send?text=Modeling%2c%20Testing%2c%20and%20Predicting: https%3a%2f%2fmayaylagan.netlify.app%2fprojects%2fmodelingtestingpredicting%2f">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="mailto:?subject=Modeling%2c%20Testing%2c%20and%20Predicting&amp;body=Check out this site https%3a%2f%2fmayaylagan.netlify.app%2fprojects%2fmodelingtestingpredicting%2f">
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+          
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll">
+    <i class="fas fa-angle-up"></i>
+  </button>
+</section>
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+</script>
+
+
+  </div><footer>
+    <div class="container py-3" id="recent-posts">
+    
+</div><div class="text-center pt-2">
+    
+    <span class="px-1">
+        <a href="https://github.com" aria-label="github">
+            <svg xmlns="http://www.w3.org/2000/svg" width="2.7em" height="2.7em" viewBox="0 0 1792 1792">
+                <path
+                    d="M522 1352q-8 9-20-3-13-11-4-19 8-9 20 3 12 11 4 19zm-42-61q9 12 0 19-8 6-17-7t0-18q9-7 17 6zm-61-60q-5 7-13 2-10-5-7-12 3-5 13-2 10 5 7 12zm31 34q-6 7-16-3-9-11-2-16 6-6 16 3 9 11 2 16zm129 112q-4 12-19 6-17-4-13-15t19-7q16 5 13 16zm63 5q0 11-16 11-17 2-17-11 0-11 16-11 17-2 17 11zm58-10q2 10-14 14t-18-8 14-15q16-2 18 9zm964-956v960q0 119-84.5 203.5t-203.5 84.5h-224q-16 0-24.5-1t-19.5-5-16-14.5-5-27.5v-239q0-97-52-142 57-6 102.5-18t94-39 81-66.5 53-105 20.5-150.5q0-121-79-206 37-91-8-204-28-9-81 11t-92 44l-38 24q-93-26-192-26t-192 26q-16-11-42.5-27t-83.5-38.5-86-13.5q-44 113-7 204-79 85-79 206 0 85 20.5 150t52.5 105 80.5 67 94 39 102.5 18q-40 36-49 103-21 10-45 15t-57 5-65.5-21.5-55.5-62.5q-19-32-48.5-52t-49.5-24l-20-3q-21 0-29 4.5t-5 11.5 9 14 13 12l7 5q22 10 43.5 38t31.5 51l10 23q13 38 44 61.5t67 30 69.5 7 55.5-3.5l23-4q0 38 .5 103t.5 68q0 22-11 33.5t-22 13-33 1.5h-224q-119 0-203.5-84.5t-84.5-203.5v-960q0-119 84.5-203.5t203.5-84.5h960q119 0 203.5 84.5t84.5 203.5z" />
+
+                <metadata>
+                    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+                        <rdf:Description about="https://iconscout.com/legal#licenses"
+                            dc:title="Github, Online, Project, Hosting, Square"
+                            dc:description="Github, Online, Project, Hosting, Square" dc:publisher="Iconscout"
+                            dc:date="2016-12-14" dc:format="image/svg+xml" dc:language="en">
+                            <dc:creator>
+                                <rdf:Bag>
+                                    <rdf:li>Font Awesome</rdf:li>
+                                </rdf:Bag>
+                            </dc:creator>
+                        </rdf:Description>
+                    </rdf:RDF>
+                </metadata>
+            </svg>
+        </a>
+    </span>
+    
+
+    
+    <span class="px-1">
+        <a href="https://linkedin.com" aria-label="linkedin">
+            <svg xmlns="http://www.w3.org/2000/svg" width='2.4em' height='2.4em' fill="#fff" aria-label="LinkedIn"
+                viewBox="0 0 512 512">
+                <rect width="512" height="512" fill="#0077b5" rx="15%" />
+                <circle cx="142" cy="138" r="37" />
+                <path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198" />
+                <path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32" />
+            </svg>
+        </a>
+    </span>
+    
+
+    
+
+    
+
+    
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+            <div class="pb-2">
+                <a href="https://mayaylagan.netlify.app/" title="Maya Ylagan">
+                    <img alt="Footer logo" src="fa-solid%20fa-square-m"
+                        height="40px" width="40px">
+                </a>
+            </div>
+            &copy; 2023  All Rights Reserved
+            <div class="text-secondary">
+                Made with
+                <span class="text-danger">
+                    &#10084;
+                </span>
+                and
+                <a href="https://github.com/gurusabarish/hugo-profile" target="_blank"
+                    title="Designed and developed by gurusabarish">
+                    Hugo Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div></footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (document.body.className.includes("light")) {
+        document.body.classList.add('dark');
+        localStorage.setItem("pref-theme", 'dark');
+    }
+</script>
+
+<script>
+    let loadingIcons;
+
+    function loading() {
+        myVar = setTimeout(showPage, 100);
+    }
+
+    function showPage() {
+        try{
+            document.getElementById("loading-icons").style.display = "block";
+        } catch(err) {}
+    }
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

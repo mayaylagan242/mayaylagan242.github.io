@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Projects on Maya Ylagan</title>
+    <link>https://mayaylagan.netlify.app/projects/</link>
+    <description>Recent content in Projects on Maya Ylagan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 01 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://mayaylagan.netlify.app/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exploratory Data Analysis</title>
+      <link>https://mayaylagan.netlify.app/projects/exploratorydataanalysis/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/projects/exploratorydataanalysis/</guid>
+      <description>Introduction: The data used in this project was collected from the USDA&amp;rsquo;s Atlas of Rural and Small-Town America. Located at: https://www.ers.usda.gov/data-products/atlas-of-rural-and-small-town-america/
+These datasets were interesting to me as they contained data for the entire nation, but each observation was a small local. So this dataset gives a good representation of the country by area, population was not accounted for in this project, and had unique county classifications and employment measurments that sparked my curiosity.</description>
+    </item>
+    
+    <item>
+      <title>Modeling, Testing, and Predicting</title>
+      <link>https://mayaylagan.netlify.app/projects/modelingtestingpredicting/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/projects/modelingtestingpredicting/</guid>
+      <description>Introduction With the ongoing pandemic I absorb statistics about the state of the virus, and to verify this information I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level. The following is some information on the dataset based on its documentation. It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level.</description>
+    </item>
+    
+  </channel>
+</rss>

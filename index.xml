@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Maya Ylagan</title>
-    <link>https://hugo-profile.netlify.app/</link>
+    <link>https://mayaylagan.netlify.app/</link>
     <description>Recent content on Maya Ylagan</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 09 Dec 2022 19:53:33 +0530</lastBuildDate><atom:link href="https://hugo-profile.netlify.app/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 09 Dec 2022 19:53:33 +0530</lastBuildDate><atom:link href="https://mayaylagan.netlify.app/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Render Math With Mathjax</title>
-      <link>https://hugo-profile.netlify.app/blogs/math/</link>
+      <link>https://mayaylagan.netlify.app/blogs/math/</link>
       <pubDate>Fri, 09 Dec 2022 19:53:33 +0530</pubDate>
       
-      <guid>https://hugo-profile.netlify.app/blogs/math/</guid>
+      <guid>https://mayaylagan.netlify.app/blogs/math/</guid>
       <description>Mathjax Math equations can be rendered using Mathjax syntax with AMS symbol support.
 Optionally enable this on a per-page basis by adding mathjax: true to your frontmatter.
 Then, use $$ ... $$ on a line by itself to render a block equation:
@@ -23,28 +23,28 @@ $$ | Pr_{x \leftarrow P_{1}} [A(x) = 1] - Pr_{x \leftarrow P_{2}} [A(x) = 1] | &
     
     <item>
       <title>Image Gallery</title>
-      <link>https://hugo-profile.netlify.app/gallery/</link>
+      <link>https://mayaylagan.netlify.app/gallery/</link>
       <pubDate>Sat, 25 Jun 2022 18:35:46 +0530</pubDate>
       
-      <guid>https://hugo-profile.netlify.app/gallery/</guid>
+      <guid>https://mayaylagan.netlify.app/gallery/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Markdown Syntax</title>
-      <link>https://hugo-profile.netlify.app/blogs/markdown-syntax/</link>
+      <link>https://mayaylagan.netlify.app/blogs/markdown-syntax/</link>
       <pubDate>Sat, 03 Apr 2021 23:29:21 +0530</pubDate>
       
-      <guid>https://hugo-profile.netlify.app/blogs/markdown-syntax/</guid>
+      <guid>https://mayaylagan.netlify.app/blogs/markdown-syntax/</guid>
       <description>Paragraph Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga.</description>
     </item>
     
     <item>
       <title>Emoji Support</title>
-      <link>https://hugo-profile.netlify.app/blogs/emoji-support/</link>
+      <link>https://mayaylagan.netlify.app/blogs/emoji-support/</link>
       <pubDate>Sat, 03 Apr 2021 22:53:58 +0530</pubDate>
       
-      <guid>https://hugo-profile.netlify.app/blogs/emoji-support/</guid>
+      <guid>https://mayaylagan.netlify.app/blogs/emoji-support/</guid>
       <description>Emoji can be enabled in a Hugo project in a number of ways. :zap:
 Emoji Support The emojify function can be called directly in templates or Inline Shortcodes.
 To enable emoji globally, set enableEmoji to true in your site’s configuration and then you can type emoji shorthand codes directly in content files; e.g.
@@ -54,10 +54,10 @@ The Emoji cheat sheet is a useful reference for emoji shorthand codes.
     
     <item>
       <title>Placeholder Text</title>
-      <link>https://hugo-profile.netlify.app/blogs/placeholder-text/</link>
+      <link>https://mayaylagan.netlify.app/blogs/placeholder-text/</link>
       <pubDate>Sat, 03 Apr 2021 22:41:10 +0530</pubDate>
       
-      <guid>https://hugo-profile.netlify.app/blogs/placeholder-text/</guid>
+      <guid>https://mayaylagan.netlify.app/blogs/placeholder-text/</guid>
       <description>Lorem est tota propiore conpellat pectoribus de pectora summo.
 Redit teque digerit hominumque toris verebor lumina non cervice subde tollit usus habet Arctonque, furores quas nec ferunt. Quoque montibus nunc caluere tempus inhospita parcite confusaque translucet patri vestro qui optatis lumine cognoscere flos nubis! Fronde ipsamque patulos Dryopen deorum.
  Exierant elisi ambit vivere dedere Duce pollice Eris modo Spargitque ferrea quos palude  Rursus nulli murmur; hastile inridet ut ab gravi sententia!</description>
@@ -65,10 +65,10 @@ Redit teque digerit hominumque toris verebor lumina non cervice subde tollit usu
     
     <item>
       <title>Rich Content</title>
-      <link>https://hugo-profile.netlify.app/blogs/rich-content/</link>
+      <link>https://mayaylagan.netlify.app/blogs/rich-content/</link>
       <pubDate>Sat, 03 Apr 2021 19:53:33 +0530</pubDate>
       
-      <guid>https://hugo-profile.netlify.app/blogs/rich-content/</guid>
+      <guid>https://mayaylagan.netlify.app/blogs/rich-content/</guid>
       <description>Hugo ships with several Built-in Shortcodes for rich content, along with a Privacy Config and a set of Simple Shortcodes that enable static and no-JS versions of various social media embeds.
 Gist Simple Shortcode {{&amp;lt; gist spf13 7896402 &amp;quot;img.html&amp;quot; &amp;gt;}} 
  Twitter Simple Shortcode {{&amp;lt; tweet GoHugoIO 1315233626070503424 &amp;gt;}} 
@@ -77,11 +77,30 @@ Profile is a customizable single-page portfolio theme for Hugo featuring a conta
     </item>
     
     <item>
+      <title>Exploratory Data Analysis</title>
+      <link>https://mayaylagan.netlify.app/projects/exploratorydataanalysis/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/projects/exploratorydataanalysis/</guid>
+      <description>Introduction: The data used in this project was collected from the USDA&amp;rsquo;s Atlas of Rural and Small-Town America. Located at: https://www.ers.usda.gov/data-products/atlas-of-rural-and-small-town-america/
+These datasets were interesting to me as they contained data for the entire nation, but each observation was a small local. So this dataset gives a good representation of the country by area, population was not accounted for in this project, and had unique county classifications and employment measurments that sparked my curiosity.</description>
+    </item>
+    
+    <item>
+      <title>Modeling, Testing, and Predicting</title>
+      <link>https://mayaylagan.netlify.app/projects/modelingtestingpredicting/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/projects/modelingtestingpredicting/</guid>
+      <description>Introduction With the ongoing pandemic I absorb statistics about the state of the virus, and to verify this information I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level. The following is some information on the dataset based on its documentation. It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level.</description>
+    </item>
+    
+    <item>
       <title>Hello R Markdown</title>
-      <link>https://hugo-profile.netlify.app/post/2020-12-01-r-rmarkdown/</link>
+      <link>https://mayaylagan.netlify.app/post/2020-12-01-r-rmarkdown/</link>
       <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
       
-      <guid>https://hugo-profile.netlify.app/post/2020-12-01-r-rmarkdown/</guid>
+      <guid>https://mayaylagan.netlify.app/post/2020-12-01-r-rmarkdown/</guid>
       <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
 You can embed an R code chunk like this:
 summary(cars) ## speed dist  ## Min. : 4.0 Min. : 2.00  ## 1st Qu.:12.0 1st Qu.: 26.00  ## Median :15.0 Median : 36.00  ## Mean :15.4 Mean : 42.</description>
