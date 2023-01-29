@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linear on Maya Ylagan</title>
+    <link>https://mayaylagan.netlify.app/tags/linear/</link>
+    <description>Recent content in Linear on Maya Ylagan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 01 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://mayaylagan.netlify.app/tags/linear/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Modeling, Testing, and Predicting</title>
+      <link>https://mayaylagan.netlify.app/projects/modelingtestingpredicting/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/projects/modelingtestingpredicting/</guid>
+      <description>Introduction With the ongoing pandemic I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level. The following is some information on this dataset based on their documentation. It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level. It contains daily snapshots in time that focuses on recent COVID-19 outcomes in the last seven days and changes relative to the week prior.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -2,7 +2,15 @@
 title: 'Exploratory Data Analysis'
 author: "Maya Ylagan - SDS348"
 date: '2021-01-01'
-image: /images/test.png
+image: "/projects/ExploratoryDataAnalysis/index_files/figure-html/confusion_matrix-1.png"
+description: ""
+tags:
+- Markdown syntax
+- Tidying Data
+- Joins/Merge
+- PCA
+- ANOVA
+- Plotting
 ---
 
 
@@ -21,13 +29,13 @@ These datasets were interesting to me as they contained data for the entire nati
 
 ### Packages {.unlisted .unnumbered}
 
-```{r}
+```{r, Packages}
 library(tidyverse)
 ```
 
-### Datasets
+### Read Data
 
-```{r}
+```{r, Data}
 jobs <- read_csv("Jobs.csv")
 county <- read_csv("County Classifications.csv")
 income <- read_csv("Income.csv")
@@ -35,14 +43,34 @@ income <- read_csv("Income.csv")
 
 ### Select applicable variables {.unlisted .unnumbered}
 
-```{r}
-county2 <- county %>% select(FIPS=FIPStxt,State, County,Type_2015_Update) %>% mutate(type=as.factor(Type_2015_Update)) %>% mutate( County_type=recode(Type_2015_Update, "0"="Nonspecialized","1"="farm-dependent", "2"="Mining-dependent", "3"="Manufacturing-dependent", "4"="FedStagovernment-dependent", "5"="Recreation" ) ) %>% select(-Type_2015_Update) %>% mutate( County_type=as.factor(County_type) )
+```{r clean_county}
+county2 <- county %>% 
+  select(FIPS=FIPStxt,State, County,Type_2015_Update) %>% 
+  mutate(type=as.factor(Type_2015_Update)) %>% 
+  mutate( County_type=
+            recode(Type_2015_Update,
+                   "0"="Nonspecialized",
+                   "1"="farm-dependent", 
+                   "2"="Mining-dependent", 
+                   "3"="Manufacturing-dependent", 
+                   "4"="FedStagovernment-dependent", 
+                   "5"="Recreation" ) ) %>% 
+  select(-Type_2015_Update) %>% 
+  mutate( County_type=as.factor(County_type) )
 ```
 
 The county dataset provided a classification system of US counties with measures(from 2015) of earnings and employment to create county types. I then recoded the discrete numeric values into a readable catagorical variable.
 
-```{r}
-jobs2 <- jobs %>% select(FIPS,State, County,contains("UnempRate"),contains("PctEmp"),-contains("PctEmpChange")) %>% mutate( UnemploymentRate=(UnempRate2018+UnempRate2017+UnempRate2016+UnempRate2015+UnempRate2014)/5 ) %>% select(-contains("20"))
+```{r, clean_jobs}
+jobs2 <- jobs %>% 
+  select(FIPS,
+         State, 
+         County,
+         contains("UnempRate"),
+         contains("PctEmp"),
+         -contains("PctEmpChange")) %>% 
+  mutate( UnemploymentRate=(UnempRate2018+UnempRate2017+UnempRate2016+UnempRate2015+UnempRate2014)/5 ) %>% 
+  select(-contains("20"))
 ```
 
 The jobs dataset provided, for each county/FIPS code, a percent of the civilian labor force 16 and over employed in a given job sector as a multiyear average from 2014 to 2018. The dataset also provided yearly unemployment rates over 2014-2018. I created a variable as the multiyear average of unemployment rate from 2014-2018.
@@ -62,16 +90,30 @@ From the documation of the data the catagorical Job Sectors are as follows
 | Services                | services                                                      |
 | Govt                    | public administration                                         |
 
-```{r}
-income2 <- income %>% select(FIPS,State,County,PerCapitaInc, PerDeepPov=Deep_Pov_All,PerChildrenDeepPov=Deep_Pov_Children)
+```{r, clean_income}
+income2 <- income %>% 
+  select(FIPS,
+         State,
+         County,
+         PerCapitaInc, 
+         PerDeepPov=Deep_Pov_All,
+         PerChildrenDeepPov=Deep_Pov_Children)
 ```
 
 The income dataset provided, for each county/FIPS code, Per Capita Income, Deep Poverty, and Deep Child Poverty over the same multiyear average (2014 to 2018).
 
 ### Tidy data
 
-```{r}
-jobs2_tidy <- jobs2 %>% pivot_longer(4:13, names_to="PctEmployed_TYPE", values_to="PercentEmployed") %>% separate(PctEmployed_TYPE, into=c("rm","PctEmployed_TYPE"),sep=6 ) %>% select(-rm) %>% mutate( PctEmployed_TYPE=as.factor(PctEmployed_TYPE) )
+```{r, tidy_jobs}
+jobs2_tidy <- jobs2 %>% 
+  pivot_longer(4:13, 
+               names_to="PctEmployed_TYPE", 
+               values_to="PercentEmployed") %>% 
+  separate(PctEmployed_TYPE, 
+           into=c("rm","PctEmployed_TYPE"),
+           sep=6 ) %>% 
+  select(-rm) %>% 
+  mutate( PctEmployed_TYPE=as.factor(PctEmployed_TYPE) )
 ```
 
 `jobs` was in a wide format for percent employed in each job sector. So, a `pivot_longer()` was done to create a catagorical variable for the type of percent emplyed in each sector. This was saved as a seperate value so that analysis can be done with either format.
@@ -82,10 +124,16 @@ jobs2_tidy <- jobs2 %>% pivot_longer(4:13, names_to="PctEmployed_TYPE", values_t
 
 #### Count observations {.unlisted .unnumbered}
 
-```{r}
-jobs2_tidy %>% select(FIPS, State, County) %>% summarise_all(n_distinct)
-county2 %>% select(FIPS, State, County) %>% summarise_all(n_distinct)
-income2 %>% select(FIPS, State, County) %>% summarise_all(n_distinct)
+```{r, join_prep}
+jobs2_tidy %>% 
+  select(FIPS, State, County) %>% 
+  summarise_all(n_distinct)
+county2 %>% 
+  select(FIPS, State, County) %>% 
+  summarise_all(n_distinct)
+income2 %>% 
+  select(FIPS, State, County) %>% 
+  summarise_all(n_distinct)
 ```
 
 #### Find differences in FIPS {.unlisted .unnumbered}

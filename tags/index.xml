@@ -71,6 +71,60 @@
     </item>
     
     <item>
+      <title>ANOVA</title>
+      <link>https://mayaylagan.netlify.app/tags/anova/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/tags/anova/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linear</title>
+      <link>https://mayaylagan.netlify.app/tags/linear/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/tags/linear/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Logistic</title>
+      <link>https://mayaylagan.netlify.app/tags/logistic/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/tags/logistic/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PCA</title>
+      <link>https://mayaylagan.netlify.app/tags/pca/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/tags/pca/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Plotting</title>
+      <link>https://mayaylagan.netlify.app/tags/plotting/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/tags/plotting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tidying Data</title>
+      <link>https://mayaylagan.netlify.app/tags/tidying-data/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/tags/tidying-data/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>plot</title>
       <link>https://mayaylagan.netlify.app/tags/plot/</link>
       <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
@@ -94,6 +148,15 @@
       <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
       
       <guid>https://mayaylagan.netlify.app/tags/regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Joins/Merge</title>
+      <link>https://mayaylagan.netlify.app/tags/joins/merge/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/tags/joins/merge/</guid>
       <description></description>
     </item>
     

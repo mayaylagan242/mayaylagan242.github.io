@@ -28,6 +28,17 @@
 
 
 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CNJVMDS4S6"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-CNJVMDS4S6', { 'anonymize_ip': false });
+}
+</script>
+
 <meta property="og:title" content="Exploratory Data Analysis" />
 <meta property="og:description" content="Introduction: The data used in this project was collected from the USDA&rsquo;s Atlas of Rural and Small-Town America. Located at: https://www.ers.usda.gov/data-products/atlas-of-rural-and-small-town-america/
 These datasets were interesting to me as they contained data for the entire nation, but each observation was a small local. So this dataset gives a good representation of the country by area, population was not accounted for in this project, and had unique county classifications and employment measurments that sparked my curiosity." />
@@ -236,7 +247,7 @@ Exploratory Data Analysis | Maya Ylagan
           </div>
           
           <div class="featured-image">
-            <img class="img-fluid" src="/images/test.png" alt="Exploratory Data Analysis">
+            <img class="img-fluid" src="/projects/ExploratoryDataAnalysis/index_files/figure-html/confusion_matrix-1.png" alt="Exploratory Data Analysis">
           </div>
           
           <article class="page-content  p-2">
@@ -246,14 +257,34 @@ Exploratory Data Analysis | Maya Ylagan
 <h2 id="importing-data-and-packages">Importing data and packages:</h2>
 <h3 class="unlisted unnumbered" id="packages">Packages</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(tidyverse)
-</code></pre></div><h3 id="datasets">Datasets</h3>
+</code></pre></div><h3 id="read-data">Read Data</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jobs <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">read_csv</span>(<span style="color:#e6db74">&#34;Jobs.csv&#34;</span>)
 county <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">read_csv</span>(<span style="color:#e6db74">&#34;County Classifications.csv&#34;</span>)
 income <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">read_csv</span>(<span style="color:#e6db74">&#34;Income.csv&#34;</span>)
 </code></pre></div><h3 class="unlisted unnumbered" id="select-applicable-variables">Select applicable variables</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">county2 <span style="color:#f92672">&lt;-</span> county <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(FIPS<span style="color:#f92672">=</span>FIPStxt,State, County,Type_2015_Update) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>(type<span style="color:#f92672">=</span><span style="color:#a6e22e">as.factor</span>(Type_2015_Update)) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>( County_type<span style="color:#f92672">=</span><span style="color:#a6e22e">recode</span>(Type_2015_Update, <span style="color:#e6db74">&#34;0&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Nonspecialized&#34;</span>,<span style="color:#e6db74">&#34;1&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;farm-dependent&#34;</span>, <span style="color:#e6db74">&#34;2&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Mining-dependent&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Manufacturing-dependent&#34;</span>, <span style="color:#e6db74">&#34;4&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;FedStagovernment-dependent&#34;</span>, <span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Recreation&#34;</span> ) ) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(<span style="color:#f92672">-</span>Type_2015_Update) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>( County_type<span style="color:#f92672">=</span><span style="color:#a6e22e">as.factor</span>(County_type) )
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">county2 <span style="color:#f92672">&lt;-</span> county <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(FIPS<span style="color:#f92672">=</span>FIPStxt,State, County,Type_2015_Update) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">mutate</span>(type<span style="color:#f92672">=</span><span style="color:#a6e22e">as.factor</span>(Type_2015_Update)) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">mutate</span>( County_type<span style="color:#f92672">=</span>
+            <span style="color:#a6e22e">recode</span>(Type_2015_Update,
+                   <span style="color:#e6db74">&#34;0&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Nonspecialized&#34;</span>,
+                   <span style="color:#e6db74">&#34;1&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;farm-dependent&#34;</span>, 
+                   <span style="color:#e6db74">&#34;2&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Mining-dependent&#34;</span>, 
+                   <span style="color:#e6db74">&#34;3&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Manufacturing-dependent&#34;</span>, 
+                   <span style="color:#e6db74">&#34;4&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;FedStagovernment-dependent&#34;</span>, 
+                   <span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Recreation&#34;</span> ) ) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(<span style="color:#f92672">-</span>Type_2015_Update) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">mutate</span>( County_type<span style="color:#f92672">=</span><span style="color:#a6e22e">as.factor</span>(County_type) )
 </code></pre></div><p>The county dataset provided a classification system of US counties with measures(from 2015) of earnings and employment to create county types. I then recoded the discrete numeric values into a readable catagorical variable.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jobs2 <span style="color:#f92672">&lt;-</span> jobs <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(FIPS,State, County,<span style="color:#a6e22e">contains</span>(<span style="color:#e6db74">&#34;UnempRate&#34;</span>),<span style="color:#a6e22e">contains</span>(<span style="color:#e6db74">&#34;PctEmp&#34;</span>),<span style="color:#f92672">-</span><span style="color:#a6e22e">contains</span>(<span style="color:#e6db74">&#34;PctEmpChange&#34;</span>)) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>( UnemploymentRate<span style="color:#f92672">=</span>(UnempRate2018<span style="color:#f92672">+</span>UnempRate2017<span style="color:#f92672">+</span>UnempRate2016<span style="color:#f92672">+</span>UnempRate2015<span style="color:#f92672">+</span>UnempRate2014)<span style="color:#f92672">/</span><span style="color:#ae81ff">5</span> ) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(<span style="color:#f92672">-</span><span style="color:#a6e22e">contains</span>(<span style="color:#e6db74">&#34;20&#34;</span>))
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jobs2 <span style="color:#f92672">&lt;-</span> jobs <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(FIPS,
+         State, 
+         County,
+         <span style="color:#a6e22e">contains</span>(<span style="color:#e6db74">&#34;UnempRate&#34;</span>),
+         <span style="color:#a6e22e">contains</span>(<span style="color:#e6db74">&#34;PctEmp&#34;</span>),
+         <span style="color:#f92672">-</span><span style="color:#a6e22e">contains</span>(<span style="color:#e6db74">&#34;PctEmpChange&#34;</span>)) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">mutate</span>( UnemploymentRate<span style="color:#f92672">=</span>(UnempRate2018<span style="color:#f92672">+</span>UnempRate2017<span style="color:#f92672">+</span>UnempRate2016<span style="color:#f92672">+</span>UnempRate2015<span style="color:#f92672">+</span>UnempRate2014)<span style="color:#f92672">/</span><span style="color:#ae81ff">5</span> ) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(<span style="color:#f92672">-</span><span style="color:#a6e22e">contains</span>(<span style="color:#e6db74">&#34;20&#34;</span>))
 </code></pre></div><p>The jobs dataset provided, for each county/FIPS code, a percent of the civilian labor force 16 and over employed in a given job sector as a multiyear average from 2014 to 2018. The dataset also provided yearly unemployment rates over 2014-2018. I created a variable as the multiyear average of unemployment rate from 2014-2018.</p>
 <p>From the documation of the data the catagorical Job Sectors are as follows</p>
 <table>
@@ -306,25 +337,45 @@ income <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">read
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">income2 <span style="color:#f92672">&lt;-</span> income <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(FIPS,State,County,PerCapitaInc, PerDeepPov<span style="color:#f92672">=</span>Deep_Pov_All,PerChildrenDeepPov<span style="color:#f92672">=</span>Deep_Pov_Children)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">income2 <span style="color:#f92672">&lt;-</span> income <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(FIPS,
+         State,
+         County,
+         PerCapitaInc, 
+         PerDeepPov<span style="color:#f92672">=</span>Deep_Pov_All,
+         PerChildrenDeepPov<span style="color:#f92672">=</span>Deep_Pov_Children)
 </code></pre></div><p>The income dataset provided, for each county/FIPS code, Per Capita Income, Deep Poverty, and Deep Child Poverty over the same multiyear average (2014 to 2018).</p>
 <h3 id="tidy-data">Tidy data</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jobs2_tidy <span style="color:#f92672">&lt;-</span> jobs2 <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">pivot_longer</span>(<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">13</span>, names_to<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;PctEmployed_TYPE&#34;</span>, values_to<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;PercentEmployed&#34;</span>) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">separate</span>(PctEmployed_TYPE, into<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;rm&#34;</span>,<span style="color:#e6db74">&#34;PctEmployed_TYPE&#34;</span>),sep<span style="color:#f92672">=</span><span style="color:#ae81ff">6</span> ) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(<span style="color:#f92672">-</span>rm) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>( PctEmployed_TYPE<span style="color:#f92672">=</span><span style="color:#a6e22e">as.factor</span>(PctEmployed_TYPE) )
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jobs2_tidy <span style="color:#f92672">&lt;-</span> jobs2 <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">pivot_longer</span>(<span style="color:#ae81ff">4</span><span style="color:#f92672">:</span><span style="color:#ae81ff">13</span>, 
+               names_to<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;PctEmployed_TYPE&#34;</span>, 
+               values_to<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;PercentEmployed&#34;</span>) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">separate</span>(PctEmployed_TYPE, 
+           into<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;rm&#34;</span>,<span style="color:#e6db74">&#34;PctEmployed_TYPE&#34;</span>),
+           sep<span style="color:#f92672">=</span><span style="color:#ae81ff">6</span> ) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(<span style="color:#f92672">-</span>rm) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">mutate</span>( PctEmployed_TYPE<span style="color:#f92672">=</span><span style="color:#a6e22e">as.factor</span>(PctEmployed_TYPE) )
 </code></pre></div><p><code>jobs</code> was in a wide format for percent employed in each job sector. So, a <code>pivot_longer()</code> was done to create a catagorical variable for the type of percent emplyed in each sector. This was saved as a seperate value so that analysis can be done with either format.</p>
 <h2 id="merge-datasets">Merge datasets:</h2>
 <h3 id="find-overlap-of-datasets">Find overlap of datasets</h3>
 <h4 class="unlisted unnumbered" id="count-observations">Count observations</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jobs2_tidy <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(FIPS, State, County) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">summarise_all</span>(n_distinct)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jobs2_tidy <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(FIPS, State, County) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">summarise_all</span>(n_distinct)
 </code></pre></div><pre tabindex="0"><code>## # A tibble: 1 × 3
 ##    FIPS State County
 ##   &lt;int&gt; &lt;int&gt;  &lt;int&gt;
 ## 1  3278    53   1947
-</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">county2 <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(FIPS, State, County) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">summarise_all</span>(n_distinct)
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">county2 <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(FIPS, State, County) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">summarise_all</span>(n_distinct)
 </code></pre></div><pre tabindex="0"><code>## # A tibble: 1 × 3
 ##    FIPS State County
 ##   &lt;int&gt; &lt;int&gt;  &lt;int&gt;
 ## 1  3225    52   1913
-</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">income2 <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(FIPS, State, County) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">summarise_all</span>(n_distinct)
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">income2 <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">select</span>(FIPS, State, County) <span style="color:#f92672">%&gt;%</span> 
+  <span style="color:#a6e22e">summarise_all</span>(n_distinct)
 </code></pre></div><pre tabindex="0"><code>## # A tibble: 1 × 3
 ##    FIPS State County
 ##   &lt;int&gt; &lt;int&gt;  &lt;int&gt;
@@ -492,7 +543,7 @@ tidycor <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">gg
   <span style="color:#a6e22e">geom_text</span>(<span style="color:#a6e22e">aes</span>(label<span style="color:#f92672">=</span><span style="color:#a6e22e">round</span>(correlation,<span style="color:#ae81ff">2</span>)),color <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;black&#34;</span>, size <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)<span style="color:#f92672">+</span> 
   <span style="color:#a6e22e">theme</span>(axis.text.x <span style="color:#f92672">=</span> <span style="color:#a6e22e">element_text</span>(angle <span style="color:#f92672">=</span> <span style="color:#ae81ff">45</span>, hjust<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Correlation Matrix for all variables&#34;</span>)
-</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" />
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" />
 <h3 id="plots">Plots</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">datatidy <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">filter</span>(<span style="color:#a6e22e">complete.cases</span>(datatidy)) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>County_type,y<span style="color:#f92672">=</span>PercentEmployed,fill<span style="color:#f92672">=</span>PctEmployed_TYPE)) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Average Percent Employed in each Job Sector for each given County Type&#34;</span>)<span style="color:#f92672">+</span>
@@ -502,7 +553,7 @@ tidycor <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">gg
   <span style="color:#a6e22e">ylab</span>(<span style="color:#e6db74">&#34;Median Percent Employed&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;County Type&#34;</span>)<span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_brewer</span>(palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Set3&#34;</span>)
-</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" />
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
 <p>The plot above illustrates median percentage employed in each job sector for each different county type, put on a scale out of 1. One of the first relationships to observe is that employment in the mining sector is typically very low across all the county types, the exception as expected is the Mining-Dependant counties. This same pattern occurs for the Agriculture job sector and the Farm-Dependent counties and with Manufacturing and Manufacturing-Dependant. The Trans, Trade, Govt, Information, FIRE, and Construction job sectors all appear to have a very similar employment rate across all the county types. The Services job sector takes a large portion of all employment in every county with some varience.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">datatidy <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">na.omit</span>() <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">ggplot</span>( <span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>County_type,y<span style="color:#f92672">=</span>PerCapitaInc,fill<span style="color:#f92672">=</span>County_type) ) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_fill_brewer</span>(palette <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Pastel2&#34;</span>) <span style="color:#f92672">+</span>
@@ -514,7 +565,7 @@ tidycor <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">gg
   <span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;County Type&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">ylab</span>(<span style="color:#e6db74">&#34;Per Capita Income&#34;</span>) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">labs</span>(title<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Per Capita Income by County Type&#34;</span>)
-</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" />
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" />
 <p>The plot above depicts the density of Counties' Per Capita Income overlayed with a boxplot, separated by the county type. Each county type has outliers much larger than the mean, but it is most prevalent in the Federal/State Government, Nonspecialized, and Recreation County types. Both the Mining and Farm Dependent county types have larger densities around their means, compared to other groups where there is a more evenly distribution across the IQR.</p>
 <h2 id="pca-dimensionality-reduction">PCA Dimensionality Reduction:</h2>
 <h3 class="unlisted unnumbered" id="data-preparation">Data Preparation</h3>
@@ -575,7 +626,7 @@ varprop<span style="color:#f92672">=</span><span style="color:#a6e22e">round</sp
   <span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;&#34;</span>) <span style="color:#f92672">+</span> 
   <span style="color:#a6e22e">scale_y_continuous</span>(breaks<span style="color:#f92672">=</span><span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">.6</span>, <span style="color:#ae81ff">.2</span>), labels <span style="color:#f92672">=</span> scales<span style="color:#f92672">::</span>percent) <span style="color:#f92672">+</span>   
   <span style="color:#a6e22e">scale_x_continuous</span>(breaks<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>)
-</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" />
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" />
 <p>Based ont the PCA&rsquo;s summary, the first 2 Principal Components together give &gt;80% Proportion of Varience. Also illustrated above, the Scree Plot levels off after the second principal component. But, for exploratory purpouses PC3 and PC4 will be included in the rest of the analysis.</p>
 <h3 id="pc1-and-pc2">PC1 and PC2</h3>
 <h4 class="unlisted unnumbered" id="loading-plots-for-pc1-and-pc2">Loading Plots for PC1 and PC2</h4>
@@ -586,7 +637,7 @@ varprop<span style="color:#f92672">=</span><span style="color:#a6e22e">round</sp
   <span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;PC1&#34;</span>) <span style="color:#f92672">+</span>   
   <span style="color:#a6e22e">geom_segment</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, y<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, xend<span style="color:#f92672">=</span>Comp.1, yend<span style="color:#f92672">=</span>Comp.2), arrow<span style="color:#f92672">=</span><span style="color:#a6e22e">arrow</span>(), col<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>) <span style="color:#f92672">+</span>   
   <span style="color:#a6e22e">geom_label</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>Comp.1<span style="color:#f92672">*</span><span style="color:#ae81ff">.8</span>, y<span style="color:#f92672">=</span>Comp.2<span style="color:#f92672">*</span><span style="color:#ae81ff">.8</span>, label<span style="color:#f92672">=</span>rowname), size <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
-</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" />
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" />
 <p>The loading plot illustrates the the contribution of each Variable to each Principal Component. The Per Capita Income variable is the main variable associated with PC1. Percent employed in Agriculture, Services, and Manufacturing were the major contributors for PC2.</p>
 <h4 class="unlisted unnumbered" id="score-plots-for-pc1-and-pc2">Score Plots for PC1 and PC2</h4>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">PC_data <span style="color:#f92672">&lt;-</span> data <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">na.omit</span>() <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>(PC1<span style="color:#f92672">=</span>data_pca<span style="color:#f92672">$</span>scores[, <span style="color:#ae81ff">1</span>],PC2<span style="color:#f92672">=</span>data_pca<span style="color:#f92672">$</span>scores[, <span style="color:#ae81ff">2</span>],PC3<span style="color:#f92672">=</span>data_pca<span style="color:#f92672">$</span>scores[, <span style="color:#ae81ff">3</span>],PC4<span style="color:#f92672">=</span>data_pca<span style="color:#f92672">$</span>scores[, <span style="color:#ae81ff">4</span>])
@@ -594,11 +645,11 @@ varprop<span style="color:#f92672">=</span><span style="color:#a6e22e">round</sp
 <span style="color:#a6e22e">ggplot</span>(PC_data, <span style="color:#a6e22e">aes</span>(PC1, PC2)) <span style="color:#f92672">+</span> 
   <span style="color:#a6e22e">geom_point</span>( <span style="color:#a6e22e">aes</span>(color<span style="color:#f92672">=</span>PctEmpServices ,size<span style="color:#f92672">=</span>PerCapitaInc) ) <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_color_continuous</span>(low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;blue&#34;</span>,high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>)
-</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" />
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" />
 <p>The score plot above has Percent employed in the sevices sector (a main contributing facor in PC2) mapped to color, and therefore the varience explained by variable is illustrated along the PC2 axis. This depiction was also applied to PC1 for the Per Captia Income was mapped to size. This plot is just a visual representation of the</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">ggplot</span>(PC_data, <span style="color:#a6e22e">aes</span>(PC1, PC2)) <span style="color:#f92672">+</span> 
   <span style="color:#a6e22e">geom_point</span>( <span style="color:#a6e22e">aes</span>(color<span style="color:#f92672">=</span>County_type) ) 
-</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" />
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" />
 <p>These are the same points the score plot above, but it was colored by the County Type (which was not included in the PCA) to find if the PCA was able to discriminate between the different types. It was unable to perform a clear differentiation between catagories, as there is no grouping and all the catagories are overlapping with very similar centers.</p>
 <h3 id="pc3-and-pc4">PC3 and PC4</h3>
 <h4 class="unlisted unnumbered" id="loading-plots-for-pc3-and-pc4">Loading Plots for PC3 and PC4</h4>
@@ -609,13 +660,13 @@ varprop<span style="color:#f92672">=</span><span style="color:#a6e22e">round</sp
   <span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;PC3&#34;</span>) <span style="color:#f92672">+</span>   
   <span style="color:#a6e22e">geom_segment</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, y<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, xend<span style="color:#f92672">=</span>Comp.3, yend<span style="color:#f92672">=</span>Comp.4), arrow<span style="color:#f92672">=</span><span style="color:#a6e22e">arrow</span>(), col<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>) <span style="color:#f92672">+</span>   
   <span style="color:#a6e22e">geom_label</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>Comp.3<span style="color:#f92672">*</span><span style="color:#ae81ff">.6</span>, y<span style="color:#f92672">=</span>Comp.4<span style="color:#f92672">*</span><span style="color:#ae81ff">.85</span>, label<span style="color:#f92672">=</span>rowname), size <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>)
-</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" />
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" />
 <p>This second loading plot illustrates the the next two Principal Components. The Pecerent Employed in Manufacturing and Agriculture are the main variables associated with PC3. Percent of Children in Deep Poverty and Percent of people in Deep Poverty were the major contributors for PC4.</p>
 <h4 class="unlisted unnumbered" id="score-plots-for-pc3-and-pc4">Score Plots for PC3 and PC4</h4>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">ggplot</span>(PC_data, <span style="color:#a6e22e">aes</span>(PC3, PC4)) <span style="color:#f92672">+</span> 
   <span style="color:#a6e22e">geom_point</span>(<span style="color:#a6e22e">aes</span>(color<span style="color:#f92672">=</span>PctEmpManufacturing,size<span style="color:#f92672">=</span>PctEmpAgriculture))  <span style="color:#f92672">+</span>
   <span style="color:#a6e22e">scale_color_continuous</span>(low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;blue&#34;</span>,high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>)
-</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" />
+</code></pre></div><img src="https://mayaylagan.netlify.app/projects/exploratorydataanalysis/index_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" />
 <p>The score plot above has Percent employed in the Manufacturing sector (a main contributing facor in PC3) mapped to color, and therefore the varience explained by this variable is illustrated along the PC3 axis. This depiction was also applied for the other coontributing variable for PC3: the Percent employed in the Agriculture sector. This was mapped to size to be a visual representation of how the loading values apply to the PCA score plot.</p>
 
           </article>
@@ -632,48 +683,36 @@ varprop<span style="color:#f92672">=</span><span style="color:#a6e22e">round</sp
                 <nav id="TableOfContents">
   <ul>
     <li><a href="#introduction">Introduction:</a></li>
-    <li><a href="#importing-data-and-packages">Importing data and packages:</a>
-      <ul>
-        <li><a href="#packages">Packages</a></li>
-        <li><a href="#datasets">Datasets</a></li>
-        <li><a href="#select-applicable-variables">Select applicable variables</a></li>
-        <li><a href="#tidy-data">Tidy data</a></li>
-      </ul>
-    </li>
-    <li><a href="#merge-datasets">Merge datasets:</a>
-      <ul>
-        <li><a href="#find-overlap-of-datasets">Find overlap of datasets</a></li>
-        <li><a href="#merge-datasets-1">Merge datasets</a></li>
-      </ul>
-    </li>
-    <li><a href="#summary-statistics">Summary Statistics:</a>
-      <ul>
-        <li><a href="#percent-values-of-employment-sum-to-100">Percent values of employment sum to 100</a></li>
-        <li><a href="#the-most-common-county-type-by-state">The most common county type by state</a></li>
-        <li><a href="#summary-statistics-for-nonemployment-variables">Summary Statistics for nonEmployment variables</a></li>
-      </ul>
-    </li>
-    <li><a href="#data-visualization">Data Visualization:</a>
-      <ul>
-        <li><a href="#heatmap">Heatmap</a></li>
-        <li><a href="#plots">Plots</a></li>
-      </ul>
-    </li>
-    <li><a href="#pca-dimensionality-reduction">PCA Dimensionality Reduction:</a>
-      <ul>
-        <li><a href="#data-preparation">Data Preparation</a></li>
-        <li><a href="#perform-pca">Perform PCA</a></li>
-        <li><a href="#scree-plot">Scree Plot</a></li>
-        <li><a href="#pc1-and-pc2">PC1 and PC2</a></li>
-        <li><a href="#pc3-and-pc4">PC3 and PC4</a></li>
-      </ul>
-    </li>
+    <li><a href="#importing-data-and-packages">Importing data and packages:</a></li>
+    <li><a href="#merge-datasets">Merge datasets:</a></li>
+    <li><a href="#summary-statistics">Summary Statistics:</a></li>
+    <li><a href="#data-visualization">Data Visualization:</a></li>
+    <li><a href="#pca-dimensionality-reduction">PCA Dimensionality Reduction:</a></li>
   </ul>
 </nav>
               </div>
           </aside>
           
 
+          
+          <aside class="tags">
+            <h5>Tags</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+              
+              <li class="list-inline-item"><a href="https://mayaylagan.netlify.app/tags/markdown-syntax" target="_blank">Markdown syntax</a></li>
+              
+              <li class="list-inline-item"><a href="https://mayaylagan.netlify.app/tags/tidying-data" target="_blank">Tidying Data</a></li>
+              
+              <li class="list-inline-item"><a href="https://mayaylagan.netlify.app/tags/joins/merge" target="_blank">Joins/Merge</a></li>
+              
+              <li class="list-inline-item"><a href="https://mayaylagan.netlify.app/tags/pca" target="_blank">PCA</a></li>
+              
+              <li class="list-inline-item"><a href="https://mayaylagan.netlify.app/tags/anova" target="_blank">ANOVA</a></li>
+              
+              <li class="list-inline-item"><a href="https://mayaylagan.netlify.app/tags/plotting" target="_blank">Plotting</a></li>
+              
+            </ul>
+          </aside>
           
 
           

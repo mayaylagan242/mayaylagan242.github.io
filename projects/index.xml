@@ -23,7 +23,7 @@ These datasets were interesting to me as they contained data for the entire nati
       <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>https://mayaylagan.netlify.app/projects/modelingtestingpredicting/</guid>
-      <description>Introduction With the ongoing pandemic I absorb statistics about the state of the virus, and to verify this information I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level. The following is some information on the dataset based on its documentation. It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level.</description>
+      <description>Introduction With the ongoing pandemic I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level. The following is some information on this dataset based on their documentation. It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level. It contains daily snapshots in time that focuses on recent COVID-19 outcomes in the last seven days and changes relative to the week prior.</description>
     </item>
     
   </channel>

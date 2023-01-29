@@ -30,5 +30,24 @@ $$ | Pr_{x \leftarrow P_{1}} [A(x) = 1] - Pr_{x \leftarrow P_{2}} [A(x) = 1] | &
       <description>Paragraph Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga.</description>
     </item>
     
+    <item>
+      <title>Exploratory Data Analysis</title>
+      <link>https://mayaylagan.netlify.app/projects/exploratorydataanalysis/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/projects/exploratorydataanalysis/</guid>
+      <description>Introduction: The data used in this project was collected from the USDA&amp;rsquo;s Atlas of Rural and Small-Town America. Located at: https://www.ers.usda.gov/data-products/atlas-of-rural-and-small-town-america/
+These datasets were interesting to me as they contained data for the entire nation, but each observation was a small local. So this dataset gives a good representation of the country by area, population was not accounted for in this project, and had unique county classifications and employment measurments that sparked my curiosity.</description>
+    </item>
+    
+    <item>
+      <title>Modeling, Testing, and Predicting</title>
+      <link>https://mayaylagan.netlify.app/projects/modelingtestingpredicting/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://mayaylagan.netlify.app/projects/modelingtestingpredicting/</guid>
+      <description>Introduction With the ongoing pandemic I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level. The following is some information on this dataset based on their documentation. It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level. It contains daily snapshots in time that focuses on recent COVID-19 outcomes in the last seven days and changes relative to the week prior.</description>
+    </item>
+    
   </channel>
 </rss>

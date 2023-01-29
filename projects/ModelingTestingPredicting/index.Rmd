@@ -2,15 +2,19 @@
 title: 'Modeling, Testing, and Predicting'
 author: "Maya Ylagan - SDS348"
 date: '2021-01-01'
-image: /images/test.png
+image: "/projects/ModelingTestingPredicting/index_files/figure-html/confusion_matrix-1.png"
+description: ""
+tags:
+- Markdown syntax
+- Logistic
+- Linear
+- ANOVA
+- Plotting
 ---
+
 # Introduction
-With the ongoing pandemic I absorb statistics about the state of the virus, and to verify this information I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level.  The following is some information on the dataset based on its documentation.  It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level.  It contains daily snapshot in time that focuses on recent COVID-19 outcomes in the last seven days and changes relative to the week prior.
 
-
-
----------------------------------------------------
-
+With the ongoing pandemic I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level.  The following is some information on this dataset based on their documentation.  It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level.  It contains daily snapshots in time that focuses on recent COVID-19 outcomes in the last seven days and changes relative to the week prior.
 
 ```{r setup, include=FALSE}
 library(knitr)
@@ -36,7 +40,7 @@ options(tibble.width = 100,width = 100)
 # Package and Data import 
 
 #### Packages
-```{r}
+```{r, Packages}
 library(tidyverse)
 library(mvtnorm)
 library(ggExtra)
@@ -51,7 +55,7 @@ library(plotROC)
 
 
 #### Data 
-```{r}
+```{r, Data}
 FullCovid <- read_csv("COVID-19_Community_Profile_Report_-_County-Level.csv") 
 CovidData <- FullCovid %>% 
   mutate( highCases = total_cases>median(total_cases,na.rm=T) ) %>% 
@@ -63,8 +67,8 @@ CovidData <- FullCovid %>%
 ---------------------------------------------------
 
 # MANOVA
-## MANOVA
-```{r}
+## Run MANOVA
+```{r, MANOVA}
 man1<-manova(cbind(total_cases,total_deaths, cases_last_7_days, deaths_last_7_days, test_positivity_rate_last_7_days, confirmed_covid_hosp_last_7_days)~region, data=CovidData)
 summary(man1)
 ```
@@ -72,13 +76,13 @@ summary(man1)
 
 
 ### Univariate ANOVAs
-```{r}
+```{r, Univariate_ANOVA}
 summary.aov(man1)
 ```
 *Each of the afore mentioned predictor variables illustrate a mean difference across groups*
 
 ### Post-hoc t-tests
-```{r}
+```{r, posthoc_ttest}
 #Total Cases
 pairwise.t.test(CovidData$total_cases, CovidData$region, p.adj="none")$p.value*67 >0.05
 
@@ -100,7 +104,7 @@ pairwise.t.test(CovidData$confirmed_covid_hosp_last_7_days, CovidData$region, p.
 *The above matricies illustrate which group means significantly differ by region and by predictor variable (accounting for the change in significance level mentioned below)*
 
 ## Significance level (α):
-```{r}
+```{r, alpha}
 1-(0.95)^67
 
 0.05/67
@@ -108,7 +112,7 @@ pairwise.t.test(CovidData$confirmed_covid_hosp_last_7_days, CovidData$region, p.
 *With 6 numeric predictors and 5 catagorical groups, 67 inference tests were done.  This creates a 96.8% chance of having a Type-1 Error.  Thus a Bonferroni correction will be done to reduce the 0.05 signifcance level to 0.00075 (7.5e-4).*
 
 ## MANOVA assumptions
-```{r}
+```{r, MANOVA_assumptions}
 group <- CovidData %>% na.omit() %>% select(region) %>% mutate(region = as.factor(region))
 DVs <- CovidData %>% na.omit() %>% select(total_cases,total_deaths, cases_last_7_days, deaths_last_7_days, test_positivity_rate_last_7_days, confirmed_covid_hosp_last_7_days) 
 
@@ -122,7 +126,7 @@ sapply(split(DVs,group), mshapiro_test)
 ---------------------------------------------------
 
 # Randomization test
-```{r}
+```{r, randomization_test}
 randData <- CovidData %>% na.omit() %>% select(test_positivity_rate_last_7_days,cases_last_7_days)
 sampleCor <- cor(randData$test_positivity_rate_last_7_days, randData$cases_last_7_days)
 
@@ -147,7 +151,7 @@ pval
 # Linear Regression Model:
 
 ### Creating and Interpreting
-```{r}
+```{r, linear_model}
 lmData <- CovidData %>% 
   select( cases_last_7_days, test_positivity_rate_last_7_days, confirmed_covid_hosp_last_7_days ) %>% 
   mutate( posRate = test_positivity_rate_last_7_days-mean(test_positivity_rate_last_7_days,na.rm=T) ) %>% 
@@ -168,13 +172,13 @@ summary(fit)
 *This linear model explain 81.42% of varience in cases the last 7 days *
 
 ### Plot of the Interaction 
-```{r}
+```{r, interaction_plot}
 interact_plot(fit, confirmHosp, posRate, plot.points = T)
 ```
 
 
 ### Linear Model Assumptions
-```{r}
+```{r, linear_model_assumptions}
 #Normality
 shapiro.test(fit$residuals) #H0: true distribution is normal
 
@@ -187,14 +191,14 @@ bptest(fit) # H0: homoskedastic
 
 
 ### Robust standard errors
-```{r}
+```{r, robust_SE}
 coeftest(fit, vcov=vcovHC(fit))
 ```
 *Because the model failed homoskeydacity robust SE were used  The robust SE changed the significance of the interaction, increased the positivity rate p-value,  but not above 0.05, and decreased all t values.* 
 
 
 
-```{r}
+```{r,bootstrap_SE}
 samp_distn<-replicate(5000, {  
   boot_dat <- sample_frac(lmData, replace=T) #take bootstrap sample of rows  
   bootfit <- lm(cases_last_7_days~posRate*confirmHosp, data=boot_dat) #fit model on bootstrap sample  
@@ -213,7 +217,7 @@ samp_distn %>% t %>% as.data.frame %>% summarize_all(sd)
 
 ## Logistic Model with 2 predictors
 ### Creating and Interpreting
-```{r}
+```{r, two_pred_logistic}
 fit2 <- glm(highCases~cases_last_7_days+total_deaths, data=CovidData, family="binomial")
 summary(fit2)
 
@@ -223,11 +227,31 @@ exp(fit2$coefficients)
 
 
 ### Confusion Matrix
-```{r}
+```{r, confusion_matrix}
 
-CovidData <- CovidData %>% filter( complete.cases(CovidData$highCases),complete.cases(CovidData$cases_last_7_days),complete.cases(CovidData$total_deaths) )
+CovidData <- CovidData %>% 
+  filter( complete.cases(CovidData$highCases),
+          complete.cases(CovidData$cases_last_7_days),
+          complete.cases(CovidData$total_deaths) )
 
-table(Predicted = (predict(fit2,type="response")>0.5) , Actual = as.numeric(CovidData$highCases)) %>% addmargins
+table(Predicted = (predict(fit2,type="response")>0.5) , 
+      Actual = CovidData$highCases) %>% 
+  as.data.frame() -> conf_mat
+
+
+ggplot(conf_mat) +
+  aes(y=factor(Predicted,levels=c(F,T)),
+      x=factor(Actual,levels=c(T,F)),
+      fill=Freq,
+      label=Freq ) +
+  geom_tile() +
+  geom_label(size=8) +
+  coord_fixed() + 
+  xlab("Actual") + 
+  ylab("Predicted") +
+  theme_bw() +
+  theme(legend.position = "none")
+
 
 class_diag<-function(probs,truth){
   
@@ -237,7 +261,10 @@ class_diag<-function(probs,truth){
   spec=tab[1,1]/colSums(tab)[1]
   ppv=tab[2,2]/rowSums(tab)[2]
 
-  if(is.numeric(truth)==FALSE & is.logical(truth)==FALSE) truth<-as.numeric(truth)-1
+  if( is.numeric(truth)==FALSE & 
+      is.logical(truth)==FALSE){
+    truth<-as.numeric(truth)-1
+  }
   
   #CALCULATE EXACT AUC
   ord<-order(probs, decreasing=TRUE)
@@ -262,7 +289,7 @@ class_diag(probs, CovidData$highCases)
 *See the above table and confusion matrix for diagnostic values of the logistic model with 2 predictors*
 
 ### Density Plot
-```{r}
+```{r, density_plot}
 
 densityVal <- CovidData %>% mutate(logit=fit2$fitted.values )
 
@@ -272,7 +299,7 @@ ggplot(densityVal, aes(x=logit, fill=highCases)) + geom_density(alpha=.5)
 
 
 ### ROC and AUC
-```{r}
+```{r, ROC_AUC}
 ROCplot<-ggplot(CovidData)+geom_roc(aes(d=highCases,m=cases_last_7_days+total_deaths), n.cuts=0) 
 ROCplot
 calc_auc(ROCplot)
@@ -282,7 +309,7 @@ calc_auc(ROCplot)
 
 ## Logistic Model with all predictors
 ### Creating and Interpreting
-```{r}
+```{r, full_logistic}
 lassoData <- CovidData %>% select(-fips, -county,-date) %>% na.omit
 fit3 <- lm(highCases~(.), data=lassoData)
 probs <- predict(fit3,data=CovidData)
@@ -293,7 +320,7 @@ class_diag(probs, lassoData$highCases)
 
 
 ### 10 Fold Cross Validation
-```{r}
+```{r, CV_10fold}
 k=10
 
 cvData<-lassoData[sample(nrow(lassoData)),] #randomly order rows
@@ -322,7 +349,7 @@ summarize_all(diags,mean) #average diagnostics across all k folds
 
 
 ### LASSO
-```{r}
+```{r, LASSO}
 library(glmnet)
 
 y<-as.matrix(lassoData$highCases) #grab response
@@ -363,7 +390,7 @@ lassoSelectedVarFunction <- highCases~regionNE+
 *The variables that were selected by LASSO were those that increased the ability of the model to predict highCases and did not add extra noise in the data for the model to learn.*
 
 ### CV with LASSO Vars
-```{r}
+```{r, LASSO_CV}
 ######## IN-SAMPLE ########
 fitLasso <- glm(lassoSelectedVarFunction, data=newLassoData)
 probs <- predict(fitLasso)
