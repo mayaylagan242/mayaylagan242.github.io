@@ -2,4 +2,7 @@
 README_files/
 README.html
 
+_freeze/
+
 projects/data/
+projects/.jupyter_cache/
