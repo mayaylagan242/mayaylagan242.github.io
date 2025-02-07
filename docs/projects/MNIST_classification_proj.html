@@ -265,7 +265,7 @@ window.Quarto = {
 </section>
 <section id="implementation" class="level2">
 <h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
-<div id="1ca0ce77" class="cell" data-execution_count="1">
+<div id="4fe58582" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -282,7 +282,7 @@ window.Quarto = {
 True</code></pre>
 </div>
 </div>
-<div id="e14f3e50" class="cell" data-execution_count="2">
+<div id="6512c6d2" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torchvision</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -297,7 +297,7 @@ True</code></pre>
 <section id="data-transformation" class="level2">
 <h2 class="anchored" data-anchor-id="data-transformation">Data Transformation</h2>
 <p>First we will define how we will transform all of the input data to train the model. First we will pull the bitmap into tensors that have separated the array of pixels into 3 color channels (RGB) with each pixel for that channel having a value from 0 to 255. Then we scale the values down to 0-1 and then normalized with a mean and standard deviation</p>
-<div id="7fa6822a" class="cell" data-execution_count="3">
+<div id="c10e9685" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>transform <span class="op">=</span> transforms.Compose(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  [</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    transforms.ToTensor(),</span>
@@ -308,7 +308,7 @@ True</code></pre>
 </section>
 <section id="data-collection" class="level2">
 <h2 class="anchored" data-anchor-id="data-collection">Data Collection</h2>
-<div id="20010a0b" class="cell" data-execution_count="4">
+<div id="7b202102" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>trainset <span class="op">=</span> datasets.MNIST(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">'data/MNIST/trainset'</span>, </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  download<span class="op">=</span><span class="va">True</span>, </span>
@@ -338,7 +338,7 @@ True</code></pre>
 </section>
 <section id="explore-data-structure" class="level2">
 <h2 class="anchored" data-anchor-id="explore-data-structure">Explore Data Structure</h2>
-<div id="6784b08b" class="cell" data-execution_count="5">
+<div id="b184b3e9" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dataiter <span class="op">=</span> <span class="bu">iter</span>(trainloader)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>images, labels <span class="op">=</span> <span class="bu">next</span>(dataiter)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -356,7 +356,7 @@ torch.Size([64])</code></pre>
 <h2 class="anchored" data-anchor-id="view-image">View Image</h2>
 <section id="one-image" class="level3">
 <h3 class="anchored" data-anchor-id="one-image">One Image</h3>
-<div id="7f8c3132" class="cell" data-execution_count="6">
+<div id="33ae9de4" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(images[<span class="dv">0</span>].numpy().squeeze(), cmap<span class="op">=</span><span class="st">'gray_r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -369,7 +369,7 @@ torch.Size([64])</code></pre>
 </section>
 <section id="multiple-images" class="level3">
 <h3 class="anchored" data-anchor-id="multiple-images">Multiple Images</h3>
-<div id="17a83fac" class="cell" data-execution_count="7">
+<div id="972bf67d" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make a plot of 25 images in a 5x5 grid</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>figure <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">8</span>))</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>cols, rows <span class="op">=</span> <span class="dv">5</span>, <span class="dv">5</span></span>
@@ -403,7 +403,7 @@ torch.Size([64])</code></pre>
 </section>
 <section id="neural-network" class="level1">
 <h1>Neural Network</h1>
-<div id="6633ea22" class="cell" data-execution_count="8">
+<div id="8de5fe13" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>input_size <span class="op">=</span> <span class="dv">28</span><span class="op">*</span><span class="dv">28</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>hidden_sizes <span class="op">=</span> [<span class="dv">128</span>, <span class="dv">64</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>output_size <span class="op">=</span> <span class="dv">10</span></span>
@@ -437,7 +437,7 @@ torch.Size([64])</code></pre>
 \]</span></p>
 <section id="loss" class="level2">
 <h2 class="anchored" data-anchor-id="loss">Loss</h2>
-<div id="bd7ace8b" class="cell" data-execution_count="9">
+<div id="ef52ac1a" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.NLLLoss()</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>images, labels <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(trainloader))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> images.view(images.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>)</span>
@@ -449,7 +449,7 @@ torch.Size([64])</code></pre>
 </section>
 <section id="move-to-cuda" class="level2">
 <h2 class="anchored" data-anchor-id="move-to-cuda">Move to CUDA</h2>
-<div id="0533d27d" class="cell" data-execution_count="10">
+<div id="9cd54578" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>model.to(device)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>model_device <span class="op">=</span> <span class="bu">next</span>(model.parameters()).device</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Model is on device: </span><span class="sc">{</span>model_device<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -460,7 +460,7 @@ torch.Size([64])</code></pre>
 </section>
 <section id="train" class="level2">
 <h2 class="anchored" data-anchor-id="train">Train</h2>
-<div id="17bf723f" class="cell" data-execution_count="11">
+<div id="02b9505c" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.003</span>, momentum<span class="op">=</span><span class="fl">0.9</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>time0 <span class="op">=</span> time()</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">15</span></span>
@@ -491,55 +491,55 @@ torch.Size([64])</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch 0 - Training loss: 0.6279923344201752
 
-Training Time (in minutes) = 0.20853707393010457
+Training Time (in minutes) = 0.18368018865585328
 Epoch 1 - Training loss: 0.2789794057766512
 
-Training Time (in minutes) = 0.41517041126887005
+Training Time (in minutes) = 0.3744107723236084
 Epoch 2 - Training loss: 0.21601013075123462
 
-Training Time (in minutes) = 0.6221478501955668
+Training Time (in minutes) = 0.5644721190134684
 Epoch 3 - Training loss: 0.17547521558898027
 
-Training Time (in minutes) = 0.8296461582183838
+Training Time (in minutes) = 0.755316436290741
 Epoch 4 - Training loss: 0.14620167161447248
 
-Training Time (in minutes) = 1.0373051087061564
+Training Time (in minutes) = 0.9458557963371277
 Epoch 5 - Training loss: 0.12437244181010897
 
-Training Time (in minutes) = 1.2454251885414123
+Training Time (in minutes) = 1.137100132306417
 Epoch 6 - Training loss: 0.10704292071018137
 
-Training Time (in minutes) = 1.453007451693217
+Training Time (in minutes) = 1.3281567374865213
 Epoch 7 - Training loss: 0.09420193405970852
 
-Training Time (in minutes) = 1.6658746123313903
+Training Time (in minutes) = 1.519015328089396
 Epoch 8 - Training loss: 0.08485479259005646
 
-Training Time (in minutes) = 1.8747961401939393
+Training Time (in minutes) = 1.709700338045756
 Epoch 9 - Training loss: 0.076070878821026
 
-Training Time (in minutes) = 2.0833901166915894
+Training Time (in minutes) = 1.9018473625183105
 Epoch 10 - Training loss: 0.06805198352638958
 
-Training Time (in minutes) = 2.291511579354604
+Training Time (in minutes) = 2.1006372292836506
 Epoch 11 - Training loss: 0.06324185459300685
 
-Training Time (in minutes) = 2.500038170814514
+Training Time (in minutes) = 2.303720760345459
 Epoch 12 - Training loss: 0.057085515677071076
 
-Training Time (in minutes) = 2.707940713564555
+Training Time (in minutes) = 2.499894162019094
 Epoch 13 - Training loss: 0.05319777697171849
 
-Training Time (in minutes) = 2.9146458864212037
+Training Time (in minutes) = 2.689081565539042
 Epoch 14 - Training loss: 0.0493274323494811
 
-Training Time (in minutes) = 3.120719579855601</code></pre>
+Training Time (in minutes) = 2.8779728531837465</code></pre>
 </div>
 </div>
 </section>
 <section id="evaluation" class="level2">
 <h2 class="anchored" data-anchor-id="evaluation">Evaluation</h2>
-<div id="dc9cc850" class="cell" data-execution_count="12">
+<div id="3e3a3d00" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> view_classify(img, ps):</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">''' Function for viewing an image and it's predicted classes.</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
@@ -556,7 +556,7 @@ Training Time (in minutes) = 3.120719579855601</code></pre>
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    ax2.set_xlim(<span class="dv">0</span>, <span class="fl">1.1</span>)</span>
 <span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="3f39fe13" class="cell" data-execution_count="13">
+<div id="7970b326" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>model.to(<span class="st">"cpu"</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>images, labels <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(valloader))</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -580,7 +580,7 @@ Training Time (in minutes) = 3.120719579855601</code></pre>
 </div>
 </div>
 </div>
-<div id="3dad6787" class="cell" data-execution_count="14">
+<div id="077c48c4" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>correct_count, all_count <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> images,labels <span class="kw">in</span> valloader:</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(labels)):</span>
@@ -605,7 +605,7 @@ Training Time (in minutes) = 3.120719579855601</code></pre>
 Model Accuracy = 0.9753</code></pre>
 </div>
 </div>
-<div id="104a1fa9" class="cell" data-execution_count="15">
+<div id="1da46ad6" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># assess accuracy by class</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>class_correct <span class="op">=</span> <span class="bu">list</span>(<span class="fl">0.</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>class_total <span class="op">=</span> <span class="bu">list</span>(<span class="fl">0.</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>))</span>
