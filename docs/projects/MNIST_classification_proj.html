@@ -205,11 +205,6 @@ window.Quarto = {
   <li><a href="#train" id="toc-train" class="nav-link" data-scroll-target="#train">Train</a></li>
   <li><a href="#evaluation" id="toc-evaluation" class="nav-link" data-scroll-target="#evaluation">Evaluation</a></li>
   </ul></li>
-  <li><a href="#find-which-classes-were-most-often-misclassified-as-the-other-classes" id="toc-find-which-classes-were-most-often-misclassified-as-the-other-classes" class="nav-link" data-scroll-target="#find-which-classes-were-most-often-misclassified-as-the-other-classes">find which classes were most often misclassified as the other classes</a></li>
-  <li><a href="#initialize-the-prediction-and-true-label-lists" id="toc-initialize-the-prediction-and-true-label-lists" class="nav-link" data-scroll-target="#initialize-the-prediction-and-true-label-lists">Initialize the prediction and true label lists</a></li>
-  <li><a href="#collect-all-predictions-and-true-labels" id="toc-collect-all-predictions-and-true-labels" class="nav-link" data-scroll-target="#collect-all-predictions-and-true-labels">Collect all predictions and true labels</a></li>
-  <li><a href="#compute-the-confusion-matrix" id="toc-compute-the-confusion-matrix" class="nav-link" data-scroll-target="#compute-the-confusion-matrix">Compute the confusion matrix</a></li>
-  <li><a href="#plot-the-confusion-matrix" id="toc-plot-the-confusion-matrix" class="nav-link" data-scroll-target="#plot-the-confusion-matrix">Plot the confusion matrix</a></li>
   </ul>
 </nav>
     </div>
@@ -265,7 +260,7 @@ window.Quarto = {
 </section>
 <section id="implementation" class="level2">
 <h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
-<div id="4fe58582" class="cell" data-execution_count="1">
+<div id="39118f24" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -282,7 +277,7 @@ window.Quarto = {
 True</code></pre>
 </div>
 </div>
-<div id="6512c6d2" class="cell" data-execution_count="2">
+<div id="43d3a66a" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torchvision</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -297,7 +292,7 @@ True</code></pre>
 <section id="data-transformation" class="level2">
 <h2 class="anchored" data-anchor-id="data-transformation">Data Transformation</h2>
 <p>First we will define how we will transform all of the input data to train the model. First we will pull the bitmap into tensors that have separated the array of pixels into 3 color channels (RGB) with each pixel for that channel having a value from 0 to 255. Then we scale the values down to 0-1 and then normalized with a mean and standard deviation</p>
-<div id="c10e9685" class="cell" data-execution_count="3">
+<div id="eec90919" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>transform <span class="op">=</span> transforms.Compose(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  [</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    transforms.ToTensor(),</span>
@@ -308,7 +303,7 @@ True</code></pre>
 </section>
 <section id="data-collection" class="level2">
 <h2 class="anchored" data-anchor-id="data-collection">Data Collection</h2>
-<div id="7b202102" class="cell" data-execution_count="4">
+<div id="4dcae59e" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>trainset <span class="op">=</span> datasets.MNIST(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">'data/MNIST/trainset'</span>, </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  download<span class="op">=</span><span class="va">True</span>, </span>
@@ -338,7 +333,7 @@ True</code></pre>
 </section>
 <section id="explore-data-structure" class="level2">
 <h2 class="anchored" data-anchor-id="explore-data-structure">Explore Data Structure</h2>
-<div id="b184b3e9" class="cell" data-execution_count="5">
+<div id="9cd36e65" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dataiter <span class="op">=</span> <span class="bu">iter</span>(trainloader)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>images, labels <span class="op">=</span> <span class="bu">next</span>(dataiter)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -356,7 +351,7 @@ torch.Size([64])</code></pre>
 <h2 class="anchored" data-anchor-id="view-image">View Image</h2>
 <section id="one-image" class="level3">
 <h3 class="anchored" data-anchor-id="one-image">One Image</h3>
-<div id="33ae9de4" class="cell" data-execution_count="6">
+<div id="6e8776e9" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(images[<span class="dv">0</span>].numpy().squeeze(), cmap<span class="op">=</span><span class="st">'gray_r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -369,7 +364,7 @@ torch.Size([64])</code></pre>
 </section>
 <section id="multiple-images" class="level3">
 <h3 class="anchored" data-anchor-id="multiple-images">Multiple Images</h3>
-<div id="972bf67d" class="cell" data-execution_count="7">
+<div id="92c57e7b" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make a plot of 25 images in a 5x5 grid</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>figure <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">8</span>))</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>cols, rows <span class="op">=</span> <span class="dv">5</span>, <span class="dv">5</span></span>
@@ -403,7 +398,7 @@ torch.Size([64])</code></pre>
 </section>
 <section id="neural-network" class="level1">
 <h1>Neural Network</h1>
-<div id="8de5fe13" class="cell" data-execution_count="8">
+<div id="9c7b72ad" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>input_size <span class="op">=</span> <span class="dv">28</span><span class="op">*</span><span class="dv">28</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>hidden_sizes <span class="op">=</span> [<span class="dv">128</span>, <span class="dv">64</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>output_size <span class="op">=</span> <span class="dv">10</span></span>
@@ -437,7 +432,7 @@ torch.Size([64])</code></pre>
 \]</span></p>
 <section id="loss" class="level2">
 <h2 class="anchored" data-anchor-id="loss">Loss</h2>
-<div id="ef52ac1a" class="cell" data-execution_count="9">
+<div id="bdb0b622" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.NLLLoss()</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>images, labels <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(trainloader))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> images.view(images.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>)</span>
@@ -449,7 +444,7 @@ torch.Size([64])</code></pre>
 </section>
 <section id="move-to-cuda" class="level2">
 <h2 class="anchored" data-anchor-id="move-to-cuda">Move to CUDA</h2>
-<div id="9cd54578" class="cell" data-execution_count="10">
+<div id="8e79f7c3" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>model.to(device)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>model_device <span class="op">=</span> <span class="bu">next</span>(model.parameters()).device</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Model is on device: </span><span class="sc">{</span>model_device<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -460,7 +455,7 @@ torch.Size([64])</code></pre>
 </section>
 <section id="train" class="level2">
 <h2 class="anchored" data-anchor-id="train">Train</h2>
-<div id="02b9505c" class="cell" data-execution_count="11">
+<div id="d1e80e24" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.003</span>, momentum<span class="op">=</span><span class="fl">0.9</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>time0 <span class="op">=</span> time()</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">15</span></span>
@@ -491,55 +486,55 @@ torch.Size([64])</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch 0 - Training loss: 0.6279923344201752
 
-Training Time (in minutes) = 0.18368018865585328
+Training Time (in minutes) = 0.18144161303838094
 Epoch 1 - Training loss: 0.2789794057766512
 
-Training Time (in minutes) = 0.3744107723236084
+Training Time (in minutes) = 0.3738550941149394
 Epoch 2 - Training loss: 0.21601013075123462
 
-Training Time (in minutes) = 0.5644721190134684
+Training Time (in minutes) = 0.566597318649292
 Epoch 3 - Training loss: 0.17547521558898027
 
-Training Time (in minutes) = 0.755316436290741
+Training Time (in minutes) = 0.7592805425326029
 Epoch 4 - Training loss: 0.14620167161447248
 
-Training Time (in minutes) = 0.9458557963371277
+Training Time (in minutes) = 0.9525968035062155
 Epoch 5 - Training loss: 0.12437244181010897
 
-Training Time (in minutes) = 1.137100132306417
+Training Time (in minutes) = 1.1458672006924948
 Epoch 6 - Training loss: 0.10704292071018137
 
-Training Time (in minutes) = 1.3281567374865213
+Training Time (in minutes) = 1.3391341725985209
 Epoch 7 - Training loss: 0.09420193405970852
 
-Training Time (in minutes) = 1.519015328089396
+Training Time (in minutes) = 1.5324556469917296
 Epoch 8 - Training loss: 0.08485479259005646
 
-Training Time (in minutes) = 1.709700338045756
+Training Time (in minutes) = 1.726176091035207
 Epoch 9 - Training loss: 0.076070878821026
 
-Training Time (in minutes) = 1.9018473625183105
+Training Time (in minutes) = 1.9190309087435404
 Epoch 10 - Training loss: 0.06805198352638958
 
-Training Time (in minutes) = 2.1006372292836506
+Training Time (in minutes) = 2.1126426140467327
 Epoch 11 - Training loss: 0.06324185459300685
 
-Training Time (in minutes) = 2.303720760345459
+Training Time (in minutes) = 2.3057743390401204
 Epoch 12 - Training loss: 0.057085515677071076
 
-Training Time (in minutes) = 2.499894162019094
+Training Time (in minutes) = 2.503786265850067
 Epoch 13 - Training loss: 0.05319777697171849
 
-Training Time (in minutes) = 2.689081565539042
+Training Time (in minutes) = 2.6980190237363177
 Epoch 14 - Training loss: 0.0493274323494811
 
-Training Time (in minutes) = 2.8779728531837465</code></pre>
+Training Time (in minutes) = 2.8898921489715574</code></pre>
 </div>
 </div>
 </section>
 <section id="evaluation" class="level2">
 <h2 class="anchored" data-anchor-id="evaluation">Evaluation</h2>
-<div id="3e3a3d00" class="cell" data-execution_count="12">
+<div id="5b2ceeb6" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> view_classify(img, ps):</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">''' Function for viewing an image and it's predicted classes.</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
@@ -556,7 +551,7 @@ Training Time (in minutes) = 2.8779728531837465</code></pre>
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    ax2.set_xlim(<span class="dv">0</span>, <span class="fl">1.1</span>)</span>
 <span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="7970b326" class="cell" data-execution_count="13">
+<div id="6c2fbc5a" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>model.to(<span class="st">"cpu"</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>images, labels <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(valloader))</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -580,7 +575,7 @@ Training Time (in minutes) = 2.8779728531837465</code></pre>
 </div>
 </div>
 </div>
-<div id="077c48c4" class="cell" data-execution_count="14">
+<div id="3fdcd27c" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>correct_count, all_count <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> images,labels <span class="kw">in</span> valloader:</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(labels)):</span>
@@ -605,7 +600,7 @@ Training Time (in minutes) = 2.8779728531837465</code></pre>
 Model Accuracy = 0.9753</code></pre>
 </div>
 </div>
-<div id="1da46ad6" class="cell" data-execution_count="15">
+<div id="9b637095" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># assess accuracy by class</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>class_correct <span class="op">=</span> <span class="bu">list</span>(<span class="fl">0.</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>))</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>class_total <span class="op">=</span> <span class="bu">list</span>(<span class="fl">0.</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>))</span>
@@ -648,29 +643,46 @@ Model Accuracy = 0.9753</code></pre>
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="find-which-classes-were-most-often-misclassified-as-the-other-classes" class="level1">
-<h1>find which classes were most often misclassified as the other classes</h1>
-<p>from sklearn.metrics import confusion_matrix import seaborn as sns</p>
-</section>
-<section id="initialize-the-prediction-and-true-label-lists" class="level1">
-<h1>Initialize the prediction and true label lists</h1>
-<p>all_preds = [] all_labels = []</p>
-</section>
-<section id="collect-all-predictions-and-true-labels" class="level1">
-<h1>Collect all predictions and true labels</h1>
-<p>with torch.no_grad(): for images, labels in valloader: images = images.view(images.shape[0], -1) outputs = model(images) _, predicted = torch.max(outputs, 1) all_preds.extend(predicted.numpy()) all_labels.extend(labels.numpy())</p>
-</section>
-<section id="compute-the-confusion-matrix" class="level1">
-<h1>Compute the confusion matrix</h1>
-<p>conf_matrix = confusion_matrix(all_labels, all_preds)</p>
-</section>
-<section id="plot-the-confusion-matrix" class="level1">
-<h1>Plot the confusion matrix</h1>
-<p>plt.figure(figsize=(10, 8)) sns.heatmap(conf_matrix, annot=True, fmt=‘d’, cmap=‘Blues’, xticklabels=classes, yticklabels=classes) plt.xlabel(‘Predicted’) plt.ylabel(‘True’) plt.title(‘Confusion Matrix’) plt.show() #```</p>
+<div id="7838b1f0" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find which classes were most often misclassified as the other classes</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the prediction and true label lists</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>all_preds <span class="op">=</span> []</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>all_labels <span class="op">=</span> []</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Collect all predictions and true labels</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> images, labels <span class="kw">in</span> valloader:</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    images <span class="op">=</span> images.view(images.shape[<span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    outputs <span class="op">=</span> model(images)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    _, predicted <span class="op">=</span> torch.<span class="bu">max</span>(outputs, <span class="dv">1</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    all_preds.extend(predicted.numpy())</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    all_labels.extend(labels.numpy())</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the confusion matrix</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>conf_matrix <span class="op">=</span> confusion_matrix(all_labels, all_preds)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the confusion matrix</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>sns.heatmap(conf_matrix, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'d'</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>, xticklabels<span class="op">=</span>classes, yticklabels<span class="op">=</span>classes)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Predicted'</span>)</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'True'</span>)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Confusion Matrix'</span>)</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="MNIST_classification_proj_files/figure-html/cell-17-output-1.png" width="765" height="671" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
