@@ -1,0 +1,242 @@
+---
+title: "Intro to SQL with DuckDB"
+description: "A beginner's guide to SQL using DuckDB"
+author: "Maya"
+date: "1/31/2025"
+categories:
+  - duckdb
+  - SQL
+execute: 
+  freeze: true
+  cache: true
+---
+
+Hi, in this project we will be creating a database using DuckDB and querying it using SQL. We will use the `nycflights13` package to provide the data for our database. This guide will walk you through the steps to set up the database, connect to it, and perform various queries.
+
+```{r}
+#| output: FALSE
+library(tidyverse)
+library(DBI)
+library(duckdb)
+```
+
+
+# Create the Flights Database in DuckDB
+
+First we create the databse based on the tables in the `nycflights13`package. This code chunk is only run once to initalize the database file. It loads the data from the package and writes it to the DuckDB database. We first load the data into R, then write it to the tables in DuckDB. Note that to write to tables in DuckDB you must set `read_only` to false. 
+
+```{r}
+#| eval = FALSE
+
+# setwd("./projects")
+
+library(nycflights13)
+
+data(airlines)
+data(airports)
+data(flights)
+data(planes)
+data(weather)
+
+con <- dbConnect(
+  drv = duckdb(), 
+  dbdir = "data/flights_db.duckdb",
+  read_only = FALSE
+)
+
+dbWriteTable(con, "airlines", airlines, overwrite = TRUE)
+dbWriteTable(con, "airports", airports, overwrite = TRUE)
+dbWriteTable(con, "flights", flights, overwrite = TRUE)
+dbWriteTable(con, "planes", planes, overwrite = TRUE)
+dbWriteTable(con, "weather", weather, overwrite = TRUE)
+
+dbDisconnect(con, shutdown = TRUE)
+```
+
+```{r}
+print(getwd())
+```
+
+
+# Query the Database
+
+With the database set up we are now able to access the data as a data consumer to gain insights and analytics from it. As a data consumer we will first connect to the database, then use that connection to pull data using SQL queries to draw insights and data-driven conclusions.
+
+## Create the query connection
+
+Here we establish the connection to the locally hosted DuckDB instance. As a data consumer we will only read data so `read_only` will be set to true. This connection will power all of our future analytics. 
+
+```{r}
+#| label: make-con
+con_flights <- DBI::dbConnect(
+  drv = duckdb::duckdb(),
+  dbdir = "./data/flights_db.duckdb",
+  read_only = TRUE
+)
+```
+
+
+# Ways to Query In Quarto
+
+## Query with a SQL chunk
+In quarto we can use SQL to directly query 
+### Find the Carriers
+```{r}
+#| echo: false
+con_flights <- DBI::dbConnect(
+  drv = duckdb::duckdb(),
+  dbdir = "./data/flights_db.duckdb",
+  read_only = TRUE
+)
+```
+
+```{sql}
+#| label: get-carriers
+#| connection: con_flights
+
+SELECT * FROM airlines LIMIT 10;
+```
+
+
+
+## Query with an R chunk
+
+### List Tables
+Using DBI commands we are able to send commands to DuckDB. Here we can list the tables.
+```{r}
+#| label: get-tables
+tables <- dbListTables(con_flights)
+print(tables)
+
+```
+
+### Top of 'flights'
+We can also list the first 10 entries in the `flights` table.
+
+```{r}
+#| echo: false
+con_flights <- DBI::dbConnect(
+  drv = duckdb::duckdb(),
+  dbdir = "./data/flights_db.duckdb",
+  read_only = TRUE
+)
+```
+```{r}
+#| label: get-flights-head
+
+result <- DBI::dbGetQuery(
+  con_flights, 
+"
+SELECT * 
+FROM flights 
+LIMIT 10
+"
+)
+print(result)
+
+DBI::dbDisconnect(con_flights)
+```
+
+
+# Analytic Queries
+
+To do some analysis of this database we will also want to plot our exploratory data pulls, so I will be using the R interface to plot using the `ggplot2` package.  By doing this the data is automatically pulled into my analysis environemnt as DuckDB is designed to do. The SQL queries are the same, and they can be integrated into other workflows, but in this case for analytics I demonstrate it directly with R.
+
+
+## Count the flights of each plane
+```{r}
+#| echo: false
+con_flights <- DBI::dbConnect(
+  drv = duckdb::duckdb(),
+  dbdir = "./data/flights_db.duckdb",
+  read_only = TRUE
+)
+```
+
+For each plane, denoted by their tailnum, I counted the number of flights each plane went on and the average distance of the flights it took
+```{r}
+#| label: get-flight-count
+
+# get the number of flights each plane went on
+result <- DBI::dbGetQuery(
+  con_flights, 
+"
+SELECT COUNT(all_tailnum.tailnum) AS 'n_flights', AVG(all_tailnum.distance) AS 'mean_dist', all_tailnum.tailnum
+FROM(
+  SELECT flights.tailnum, flights.distance
+  FROM flights
+) AS all_tailnum
+GROUP BY all_tailnum.tailnum
+ORDER BY n_flights DESC
+"
+)
+head(result)
+```
+
+```{r}
+#| label: plot-flight-count
+ggplot(result) +
+  aes(
+    x = mean_dist,
+    y = n_flights
+  ) +
+  geom_point() +
+  theme_classic()
+```
+
+## Find the fleet compositions
+```{r}
+#| echo: false
+con_flights <- DBI::dbConnect(
+  drv = duckdb::duckdb(),
+  dbdir = "./data/flights_db.duckdb",
+  read_only = TRUE
+)
+```
+Here we pulled the information about each airline carrier's fleet of planes they flew a flight in this dataset. We assessed their manufacturer and model and counted the number of each of the types of planes by distinct tailnum.
+```{r}
+#| label: get-fleet
+result <- dbGetQuery(
+  con_flights, 
+"
+SELECT airlines.name, manufacturer, model, COUNT(distinct_tailnums.tailnum)
+FROM (
+  SELECT DISTINCT flights.tailnum, flights.carrier, manufacturer, model
+  FROM flights
+  LEFT JOIN planes
+  ON flights.tailnum = planes.tailnum
+) AS distinct_tailnums
+LEFT JOIN airlines
+ON distinct_tailnums.carrier = airlines.carrier
+GROUP BY airlines.name, manufacturer, model
+"
+)
+head(result)
+```
+
+```{r}
+#| label: plot-fleet
+#| column: screen-inset-shaded
+
+result %>%
+  # remove NAs
+  filter(!is.na(manufacturer)) %>%
+  filter(!is.na(model)) %>%
+  # Plot only United Air Lines Inc.
+  filter(name == "United Air Lines Inc.") %>%
+  rename(n_planes = "count(distinct_tailnums.tailnum)") %>%
+  ggplot() + 
+  aes(
+    x = manufacturer,
+    y = model,
+    fill = n_planes
+  ) +
+  geom_tile() + 
+  # Used to plot all airlines at once
+  # facet_wrap(~name, scales = "free") +
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 90)
+  )
+```
+

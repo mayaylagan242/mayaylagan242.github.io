@@ -7,6 +7,146 @@
     "text": "About this site"
   },
   {
+    "objectID": "publications/index.html",
+    "href": "publications/index.html",
+    "title": "Publications",
+    "section": "",
+    "text": "TODO\n\n\n\n\n\n\n\n\n\n\n\n\nTTSBBC\n\n\n\nRShiny\n\n\nTriplex Target Sites\n\n\nSQL\n\n\n\ndescription of TTSBBC\n\n\n\nMaya\n\n\nJul 30, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html",
+    "href": "projects/MNIST_classification_proj.html",
+    "title": "first post",
+    "section": "",
+    "text": "This project demonstrates a basic neural network implementation using Python and PyTorch.\n\n\nNeural networks are a set of algorithms, modeled loosely after the human brain, that are designed to recognize patterns. They interpret sensory data through a kind of machine perception, labeling, or clustering of raw input.\n\n\n\n\nimport torch\nimport numpy as np\n\n# Set seed for reproducibility\ntorch.manual_seed(42)\nnp.random.seed(42)\n\nprint(torch.__version__)\nprint(torch.cuda.is_available())\n\ndevice = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\n\n2.5.1+cu121\nTrue\n\n\n\nimport numpy as np\nimport torchvision\nimport matplotlib.pyplot as plt\nfrom time import time\nfrom torchvision import datasets, transforms\nfrom torch import nn, optim"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#introduction",
+    "href": "projects/MNIST_classification_proj.html#introduction",
+    "title": "first post",
+    "section": "",
+    "text": "Neural networks are a set of algorithms, modeled loosely after the human brain, that are designed to recognize patterns. They interpret sensory data through a kind of machine perception, labeling, or clustering of raw input."
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#implementation",
+    "href": "projects/MNIST_classification_proj.html#implementation",
+    "title": "first post",
+    "section": "",
+    "text": "import torch\nimport numpy as np\n\n# Set seed for reproducibility\ntorch.manual_seed(42)\nnp.random.seed(42)\n\nprint(torch.__version__)\nprint(torch.cuda.is_available())\n\ndevice = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\n\n2.5.1+cu121\nTrue\n\n\n\nimport numpy as np\nimport torchvision\nimport matplotlib.pyplot as plt\nfrom time import time\nfrom torchvision import datasets, transforms\nfrom torch import nn, optim"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#data-transformation",
+    "href": "projects/MNIST_classification_proj.html#data-transformation",
+    "title": "first post",
+    "section": "Data Transformation",
+    "text": "Data Transformation\nFirst we will define how we will transform all of the input data to train the model. First we will pull the bitmap into tensors that have separated the array of pixels into 3 color channels (RGB) with each pixel for that channel having a value from 0 to 255. Then we scale the values down to 0-1 and then normalized with a mean and standard deviation\n\ntransform = transforms.Compose(\n  [\n    transforms.ToTensor(),\n    transforms.Normalize((0.5,), (0.5,)),\n  ]\n)"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#data-collection",
+    "href": "projects/MNIST_classification_proj.html#data-collection",
+    "title": "first post",
+    "section": "Data Collection",
+    "text": "Data Collection\n\ntrainset = datasets.MNIST(\n  'data/MNIST/trainset', \n  download=True, \n  train=True, \n  transform=transform\n)\n\nvalset = datasets.MNIST(\n  'data/MNIST/valset', \n  download=True, \n  train=False, \n  transform=transform\n)\n\ntrainloader = torch.utils.data.DataLoader(\n  trainset, \n  batch_size=64, \n  shuffle=True\n)\n\nvalloader = torch.utils.data.DataLoader(\n  valset, \n  batch_size=64, \n  shuffle=True\n)"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#explore-data-structure",
+    "href": "projects/MNIST_classification_proj.html#explore-data-structure",
+    "title": "first post",
+    "section": "Explore Data Structure",
+    "text": "Explore Data Structure\n\ndataiter = iter(trainloader)\nimages, labels = next(dataiter)\n\nprint(images.shape)\nprint(labels.shape)\n\ntorch.Size([64, 1, 28, 28])\ntorch.Size([64])\n\n\nThere are 64 images in each batch where each image is 28 pixels x 28 pixels\nThe labels have one dimension of 64 labels for the corresponding image!"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#view-image",
+    "href": "projects/MNIST_classification_proj.html#view-image",
+    "title": "first post",
+    "section": "View Image",
+    "text": "View Image\n\nOne Image\n\nplt.imshow(images[0].numpy().squeeze(), cmap='gray_r')\n\n\n\n\n\n\n\n\n\n\nMultiple Images\n\n# make a plot of 25 images in a 5x5 grid\nfigure = plt.figure(figsize=(8, 8))\ncols, rows = 5, 5\nfor i in range(1, cols * rows + 1):\n  img = images[i - 1].squeeze()\n  ax = figure.add_subplot(rows, cols, i)\n  ax.imshow(img, cmap=\"gray_r\")\n  # add title\n  ax.set_title(labels[i - 1].item(), y=1, pad=1.5)\n\n  # clean up subplot axes\n  ax.tick_params(axis='both', which='both', length=0)\n  ax.set_xticklabels([])\n  ax.set_yticklabels([])\n  # make axes thicker\n  for spine in ax.spines.values():\n    spine.set_edgecolor('black')\n    spine.set_linewidth(1.5)\n\nplt.show()"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#loss",
+    "href": "projects/MNIST_classification_proj.html#loss",
+    "title": "first post",
+    "section": "Loss",
+    "text": "Loss\n\ncriterion = nn.NLLLoss()\nimages, labels = next(iter(trainloader))\nimages = images.view(images.shape[0], -1)\nlabels = labels\n\nlogps = model(images) #log probabilities\nloss = criterion(logps, labels) #calculate the NLL loss"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#move-to-cuda",
+    "href": "projects/MNIST_classification_proj.html#move-to-cuda",
+    "title": "first post",
+    "section": "Move to CUDA",
+    "text": "Move to CUDA\n\nmodel.to(device)\nmodel_device = next(model.parameters()).device\nprint(f\"Model is on device: {model_device}\")\n\nModel is on device: cuda:0"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#train",
+    "href": "projects/MNIST_classification_proj.html#train",
+    "title": "first post",
+    "section": "Train",
+    "text": "Train\n\noptimizer = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)\ntime0 = time()\nepochs = 15\n\nfor e in range(epochs):\n  running_loss = 0\n  for images, labels in trainloader:\n    # Flatten MNIST images into a 784 long vector and move to CUDA\n    images = images.view(images.shape[0], -1).to(device)\n    labels = labels.to(device)\n  \n    # Training pass\n    optimizer.zero_grad()\n    \n    output = model(images)\n    loss = criterion(output, labels)\n    \n    # This is where the model learns by backpropagating\n    loss.backward()\n    \n    # And optimizes its weights here\n    optimizer.step()\n    \n    running_loss += loss.item()\n  else:\n    print(f\"Epoch {e} - Training loss: {running_loss/len(trainloader)}\")\n    print(\"\\nTraining Time (in minutes) =\",(time()-time0)/60)\n\nEpoch 0 - Training loss: 0.6279923344201752\n\nTraining Time (in minutes) = 0.20853707393010457\nEpoch 1 - Training loss: 0.2789794057766512\n\nTraining Time (in minutes) = 0.41517041126887005\nEpoch 2 - Training loss: 0.21601013075123462\n\nTraining Time (in minutes) = 0.6221478501955668\nEpoch 3 - Training loss: 0.17547521558898027\n\nTraining Time (in minutes) = 0.8296461582183838\nEpoch 4 - Training loss: 0.14620167161447248\n\nTraining Time (in minutes) = 1.0373051087061564\nEpoch 5 - Training loss: 0.12437244181010897\n\nTraining Time (in minutes) = 1.2454251885414123\nEpoch 6 - Training loss: 0.10704292071018137\n\nTraining Time (in minutes) = 1.453007451693217\nEpoch 7 - Training loss: 0.09420193405970852\n\nTraining Time (in minutes) = 1.6658746123313903\nEpoch 8 - Training loss: 0.08485479259005646\n\nTraining Time (in minutes) = 1.8747961401939393\nEpoch 9 - Training loss: 0.076070878821026\n\nTraining Time (in minutes) = 2.0833901166915894\nEpoch 10 - Training loss: 0.06805198352638958\n\nTraining Time (in minutes) = 2.291511579354604\nEpoch 11 - Training loss: 0.06324185459300685\n\nTraining Time (in minutes) = 2.500038170814514\nEpoch 12 - Training loss: 0.057085515677071076\n\nTraining Time (in minutes) = 2.707940713564555\nEpoch 13 - Training loss: 0.05319777697171849\n\nTraining Time (in minutes) = 2.9146458864212037\nEpoch 14 - Training loss: 0.0493274323494811\n\nTraining Time (in minutes) = 3.120719579855601"
+  },
+  {
+    "objectID": "projects/MNIST_classification_proj.html#evaluation",
+    "href": "projects/MNIST_classification_proj.html#evaluation",
+    "title": "first post",
+    "section": "Evaluation",
+    "text": "Evaluation\n\ndef view_classify(img, ps):\n    ''' Function for viewing an image and it's predicted classes.\n    '''\n    ps = ps.data.numpy().squeeze()\n\n    fig, (ax1, ax2) = plt.subplots(figsize=(6,9), ncols=2)\n    ax1.imshow(img.resize_(1, 28, 28).numpy().squeeze())\n    ax1.axis('off')\n    ax2.barh(np.arange(10), ps)\n    ax2.set_aspect(0.1)\n    ax2.set_yticks(np.arange(10))\n    ax2.set_yticklabels(np.arange(10))\n    ax2.set_title('Class Probability')\n    ax2.set_xlim(0, 1.1)\n    plt.tight_layout()\n\n\nmodel.to(\"cpu\")\nimages, labels = next(iter(valloader))\n\nimg = images[0].view(1, 784)\n\nwith torch.no_grad():\n    logps = model(img)\n\nps = torch.exp(logps)\nprobab = list(ps.numpy()[0])\nprint(\"Predicted Digit =\", probab.index(max(probab)))\nview_classify(img.view(1, 28, 28), ps)\n\nPredicted Digit = 4\n\n\n\n\n\n\n\n\n\n\ncorrect_count, all_count = 0, 0\nfor images,labels in valloader:\n  for i in range(len(labels)):\n    img = images[i].view(1, 784)\n    with torch.no_grad():\n        logps = model(img)\n\n    \n    ps = torch.exp(logps)\n    probab = list(ps.numpy()[0])\n    pred_label = probab.index(max(probab))\n    true_label = labels.numpy()[i]\n    if(true_label == pred_label):\n      correct_count += 1\n    all_count += 1\n\nprint(\"Number Of Images Tested =\", all_count)\nprint(\"\\nModel Accuracy =\", (correct_count/all_count))\n\nNumber Of Images Tested = 10000\n\nModel Accuracy = 0.9753\n\n\n\n# assess accuracy by class\nclass_correct = list(0. for i in range(10))\nclass_total = list(0. for i in range(10))\n\nwith torch.no_grad():\n  for images, labels in valloader:\n    images = images.view(images.shape[0], -1)\n    outputs = model(images)\n    _, predicted = torch.max(outputs, 1)\n    c = (predicted == labels).squeeze()\n    for i in range(len(labels)):\n      label = labels[i]\n      class_correct[label] += c[i].item()\n      class_total[label] += 1\n\n# Calculate average accuracy\naverage_accuracy = correct_count/all_count * 100\n\n# Plot accuracy by class\nfig, ax = plt.subplots()\nclasses = list(range(10))\naccuracies = [100 * class_correct[i] / class_total[i] if class_total[i] &gt; 0 else 0 for i in classes]\n\nax.bar(classes, accuracies, color='blue')\nax.axhline(y=average_accuracy, color='red', linestyle='--', label=f'Average Accuracy: {average_accuracy:.2f}%')\n\nax.set_xlabel('Class')\nax.set_ylabel('Accuracy (%)')\nax.set_title('Accuracy by Class')\nax.set_xticks(classes)\nax.set_xticklabels(classes)\nax.legend()\n\nplt.show()"
+  },
+  {
+    "objectID": "projects/sql_intro_proj.html",
+    "href": "projects/sql_intro_proj.html",
+    "title": "Intro to SQL with DuckDB",
+    "section": "",
+    "text": "Hi, in this project we will be creating a database using DuckDB and querying it using SQL. We will use the nycflights13 package to provide the data for our database. This guide will walk you through the steps to set up the database, connect to it, and perform various queries.\nlibrary(tidyverse)\nlibrary(DBI)\nlibrary(duckdb)"
+  },
+  {
+    "objectID": "projects/sql_intro_proj.html#create-the-query-connection",
+    "href": "projects/sql_intro_proj.html#create-the-query-connection",
+    "title": "Intro to SQL with DuckDB",
+    "section": "Create the query connection",
+    "text": "Create the query connection\nHere we establish the connection to the locally hosted DuckDB instance. As a data consumer we will only read data so read_only will be set to true. This connection will power all of our future analytics.\n\ncon_flights &lt;- DBI::dbConnect(\n  drv = duckdb::duckdb(),\n  dbdir = \"./data/flights_db.duckdb\",\n  read_only = TRUE\n)"
+  },
+  {
+    "objectID": "projects/sql_intro_proj.html#query-with-a-sql-chunk",
+    "href": "projects/sql_intro_proj.html#query-with-a-sql-chunk",
+    "title": "Intro to SQL with DuckDB",
+    "section": "Query with a SQL chunk",
+    "text": "Query with a SQL chunk\nIn quarto we can use SQL to directly query ### Find the Carriers\n\nSELECT * FROM airlines LIMIT 10;\n\n\nDisplaying records 1 - 10\n\n\ncarrier\nname\n\n\n\n\n9E\nEndeavor Air Inc.\n\n\nAA\nAmerican Airlines Inc.\n\n\nAS\nAlaska Airlines Inc.\n\n\nB6\nJetBlue Airways\n\n\nDL\nDelta Air Lines Inc.\n\n\nEV\nExpressJet Airlines Inc.\n\n\nF9\nFrontier Airlines Inc.\n\n\nFL\nAirTran Airways Corporation\n\n\nHA\nHawaiian Airlines Inc.\n\n\nMQ\nEnvoy Air"
+  },
+  {
+    "objectID": "projects/sql_intro_proj.html#query-with-an-r-chunk",
+    "href": "projects/sql_intro_proj.html#query-with-an-r-chunk",
+    "title": "Intro to SQL with DuckDB",
+    "section": "Query with an R chunk",
+    "text": "Query with an R chunk\n\nList Tables\nUsing DBI commands we are able to send commands to DuckDB. Here we can list the tables.\n\ntables &lt;- dbListTables(con_flights)\nprint(tables)\n\n[1] \"airlines\" \"airports\" \"flights\"  \"planes\"   \"weather\" \n\n\n\n\nTop of ‘flights’\nWe can also list the first 10 entries in the flights table.\n\nresult &lt;- DBI::dbGetQuery(\n  con_flights, \n\"\nSELECT * \nFROM flights \nLIMIT 10\n\"\n)\nprint(result)\n\n   year month day dep_time sched_dep_time dep_delay arr_time sched_arr_time\n1  2013     1   1      517            515         2      830            819\n2  2013     1   1      533            529         4      850            830\n3  2013     1   1      542            540         2      923            850\n4  2013     1   1      544            545        -1     1004           1022\n5  2013     1   1      554            600        -6      812            837\n6  2013     1   1      554            558        -4      740            728\n7  2013     1   1      555            600        -5      913            854\n8  2013     1   1      557            600        -3      709            723\n9  2013     1   1      557            600        -3      838            846\n10 2013     1   1      558            600        -2      753            745\n   arr_delay carrier flight tailnum origin dest air_time distance hour minute\n1         11      UA   1545  N14228    EWR  IAH      227     1400    5     15\n2         20      UA   1714  N24211    LGA  IAH      227     1416    5     29\n3         33      AA   1141  N619AA    JFK  MIA      160     1089    5     40\n4        -18      B6    725  N804JB    JFK  BQN      183     1576    5     45\n5        -25      DL    461  N668DN    LGA  ATL      116      762    6      0\n6         12      UA   1696  N39463    EWR  ORD      150      719    5     58\n7         19      B6    507  N516JB    EWR  FLL      158     1065    6      0\n8        -14      EV   5708  N829AS    LGA  IAD       53      229    6      0\n9         -8      B6     79  N593JB    JFK  MCO      140      944    6      0\n10         8      AA    301  N3ALAA    LGA  ORD      138      733    6      0\n             time_hour\n1  2013-01-01 10:00:00\n2  2013-01-01 10:00:00\n3  2013-01-01 10:00:00\n4  2013-01-01 10:00:00\n5  2013-01-01 11:00:00\n6  2013-01-01 10:00:00\n7  2013-01-01 11:00:00\n8  2013-01-01 11:00:00\n9  2013-01-01 11:00:00\n10 2013-01-01 11:00:00\n\nDBI::dbDisconnect(con_flights)"
+  },
+  {
+    "objectID": "projects/sql_intro_proj.html#count-the-flights-of-each-plane",
+    "href": "projects/sql_intro_proj.html#count-the-flights-of-each-plane",
+    "title": "Intro to SQL with DuckDB",
+    "section": "Count the flights of each plane",
+    "text": "Count the flights of each plane\nFor each plane, denoted by their tailnum, I counted the number of flights each plane went on and the average distance of the flights it took\n\n# get the number of flights each plane went on\nresult &lt;- DBI::dbGetQuery(\n  con_flights, \n\"\nSELECT COUNT(all_tailnum.tailnum) AS 'n_flights', AVG(all_tailnum.distance) AS 'mean_dist', all_tailnum.tailnum\nFROM(\n  SELECT flights.tailnum, flights.distance\n  FROM flights\n) AS all_tailnum\nGROUP BY all_tailnum.tailnum\nORDER BY n_flights DESC\n\"\n)\nhead(result)\n\n  n_flights mean_dist tailnum\n1       575  558.6052  N725MQ\n2       513  545.8908  N722MQ\n3       507  537.6272  N723MQ\n4       486  541.9733  N711MQ\n5       483  549.4762  N713MQ\n6       427  529.8806  N258JB\n\n\n\nggplot(result) +\n  aes(\n    x = mean_dist,\n    y = n_flights\n  ) +\n  geom_point()"
+  },
+  {
+    "objectID": "projects/sql_intro_proj.html#find-the-fleet-compositions",
+    "href": "projects/sql_intro_proj.html#find-the-fleet-compositions",
+    "title": "Intro to SQL with DuckDB",
+    "section": "Find the fleet compositions",
+    "text": "Find the fleet compositions\nHere we pulled the information about each airline carrier’s fleet of planes they flew a flight in this dataset. We assessed their manufacturer and model and counted the number of each of the types of planes by distinct tailnum.\n\nresult &lt;- dbGetQuery(\n  con_flights, \n\"\nSELECT airlines.name, manufacturer, model, COUNT(distinct_tailnums.tailnum)\nFROM (\n  SELECT DISTINCT flights.tailnum, flights.carrier, manufacturer, model\n  FROM flights\n  LEFT JOIN planes\n  ON flights.tailnum = planes.tailnum\n) AS distinct_tailnums\nLEFT JOIN airlines\nON distinct_tailnums.carrier = airlines.carrier\nGROUP BY airlines.name, manufacturer, model\n\"\n)\nhead(result)\n\n                      name     manufacturer       model\n1    United Air Lines Inc.           BOEING     757-224\n2 ExpressJet Airlines Inc.         CANADAIR CL-600-2B19\n3    United Air Lines Inc. AIRBUS INDUSTRIE    A319-131\n4   Southwest Airlines Co.           BOEING     737-7H4\n5        Endeavor Air Inc.   BOMBARDIER INC CL-600-2B19\n6 ExpressJet Airlines Inc.   BOMBARDIER INC CL-600-2B19\n  count(distinct_tailnums.tailnum)\n1                               41\n2                                9\n3                               50\n4                              361\n5                              140\n6                               19\n\n\n\nresult %&gt;%\n  # remove NAs\n  filter(!is.na(manufacturer)) %&gt;%\n  filter(!is.na(model)) %&gt;%\n  # Plot only United Air Lines Inc.\n  filter(name == \"United Air Lines Inc.\") %&gt;%\n  rename(n_planes = \"count(distinct_tailnums.tailnum)\") %&gt;%\n  ggplot() + \n  aes(\n    x = manufacturer,\n    y = model,\n    fill = n_planes\n  ) +\n  geom_tile() + \n  # Used to plot all airlines at once\n  # facet_wrap(~name, scales = \"free\") +\n  theme_classic() +\n  theme(\n    axis.text.x = element_text(angle = 90)\n  )"
+  },
+  {
+    "objectID": "projects/index.html",
+    "href": "projects/index.html",
+    "title": "Projects",
+    "section": "",
+    "text": "Welcome to my projects page. Below are some of the projects that I have made for fun to explore each topic. I hope you enjoy!\n\n\n\n\n\n\n\n\n\n\n\n\nIntro to SQL with DuckDB\n\n\n\nduckdb\n\n\nSQL\n\n\n\nA beginner’s guide to SQL using DuckDB\n\n\n\nMaya\n\n\nJan 31, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nfirst post\n\n\n\npytorch\n\n\nneural networks\n\n\n\ndescription of first post\n\n\n\nMaya\n\n\nJan 31, 2025\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "publications/TTSBBC.html",
+    "href": "publications/TTSBBC.html",
+    "title": "TTSBBC",
+    "section": "",
+    "text": "Link to application\nAbout the application structure and resources - dbplyr - SQL - AWS - Docker/ECS"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "mysite",

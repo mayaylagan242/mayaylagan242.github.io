@@ -1,0 +1,15 @@
+[
+  {
+    "listing": "/publications/index.html",
+    "items": [
+      "/publications/TTSBBC.html"
+    ]
+  },
+  {
+    "listing": "/projects/index.html",
+    "items": [
+      "/projects/sql_intro_proj.html",
+      "/projects/MNIST_classification_proj.html"
+    ]
+  }
+]

@@ -4,11 +4,37 @@ project:
 
 website:
   title: "mysite"
+  bread-crumbs: true
+  page-navigation: true
+  # favicon: logo.png
+
   navbar:
+    title: Maya Ylagan
+    logo: "logo.png"
     left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+      - href: about.qmd
+        text: About Me
+        # icon: 
+      - href: projects/index.qmd
+    tools:
+      - icon: github
+        href: github.com/mayaylagan242
+  
+  # TODO
+  # Hybrid Navigation
+  # sidebar:
+  #   - id: projects
+  #     style: "docked"
+  #     # collapse-level: 2
+  #     contents:
+  #       - projects/
+  #       - projects/project1.qmd
+  #       - projects/project2.qmd
+
+  # google-analytics:
+  #   tracking-id: "UA-XXXXXXXX"
+  #   anonymize-ip: true
+  # cookie-consent: true
 
 format:
   html:

@@ -1,0 +1,19 @@
+---
+title: Projects
+listing: 
+  - id: projects
+    contents: .
+    type: grid
+    categories: true
+    # grid-columns: 4
+#   - id: books
+#     contents: project/book
+#     type: grid
+#     sort-ui: false
+#     filter-ui: false
+#     grid-columns: 2
+#     image-height: 350px
+
+---
+
+Welcome to my projects page. Below are some of the projects that I have made for fun to explore each topic. I hope you enjoy!
