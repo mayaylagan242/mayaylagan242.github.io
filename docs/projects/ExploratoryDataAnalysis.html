@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Maya Ylagan">
+<meta name="dcterms.date" content="2021-01-01">
+
+<title>Exploratory Data Analysis – mysite</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b1f70d07cd87deda94dcb53126680b4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Maya Ylagan</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About Me</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../projects/index.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="../github.com/mayaylagan242" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction:</a></li>
+  <li><a href="#importing-data-and-packages" id="toc-importing-data-and-packages" class="nav-link" data-scroll-target="#importing-data-and-packages">Importing data and packages:</a>
+  <ul class="collapse">
+  <li><a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages">Packages</a></li>
+  <li><a href="#read-data" id="toc-read-data" class="nav-link" data-scroll-target="#read-data">Read Data</a></li>
+  <li><a href="#select-applicable-variables" id="toc-select-applicable-variables" class="nav-link" data-scroll-target="#select-applicable-variables">Select applicable variables</a></li>
+  <li><a href="#tidy-data" id="toc-tidy-data" class="nav-link" data-scroll-target="#tidy-data">Tidy data</a></li>
+  </ul></li>
+  <li><a href="#merge-datasets" id="toc-merge-datasets" class="nav-link" data-scroll-target="#merge-datasets">Merge datasets:</a>
+  <ul class="collapse">
+  <li><a href="#find-overlap-of-datasets" id="toc-find-overlap-of-datasets" class="nav-link" data-scroll-target="#find-overlap-of-datasets">Find overlap of datasets</a></li>
+  <li><a href="#merge-datasets-1" id="toc-merge-datasets-1" class="nav-link" data-scroll-target="#merge-datasets-1">Merge datasets</a></li>
+  </ul></li>
+  <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics">Summary Statistics:</a>
+  <ul class="collapse">
+  <li><a href="#percent-values-of-employment-sum-to-100" id="toc-percent-values-of-employment-sum-to-100" class="nav-link" data-scroll-target="#percent-values-of-employment-sum-to-100">Percent values of employment sum to 100</a></li>
+  <li><a href="#the-most-common-county-type-by-state" id="toc-the-most-common-county-type-by-state" class="nav-link" data-scroll-target="#the-most-common-county-type-by-state">The most common county type by state</a></li>
+  </ul></li>
+  <li><a href="#data-visualization" id="toc-data-visualization" class="nav-link" data-scroll-target="#data-visualization">Data Visualization:</a>
+  <ul class="collapse">
+  <li><a href="#heatmap" id="toc-heatmap" class="nav-link" data-scroll-target="#heatmap">Heatmap</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
+  </ul></li>
+  <li><a href="#pca-dimensionality-reduction" id="toc-pca-dimensionality-reduction" class="nav-link" data-scroll-target="#pca-dimensionality-reduction">PCA Dimensionality Reduction:</a>
+  <ul class="collapse">
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data Preparation</a></li>
+  <li><a href="#perform-pca" id="toc-perform-pca" class="nav-link" data-scroll-target="#perform-pca">Perform PCA</a></li>
+  <li><a href="#scree-plot" id="toc-scree-plot" class="nav-link" data-scroll-target="#scree-plot">Scree Plot</a></li>
+  <li><a href="#pc1-and-pc2" id="toc-pc1-and-pc2" class="nav-link" data-scroll-target="#pc1-and-pc2">PC1 and PC2</a></li>
+  <li><a href="#pc3-and-pc4" id="toc-pc3-and-pc4" class="nav-link" data-scroll-target="#pc3-and-pc4">PC3 and PC4</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Exploratory Data Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Maya Ylagan </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2021</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction:</h2>
+<p>The data used in this project was collected from the USDA’s Atlas of Rural and Small-Town America. Located at: <a href="https://www.ers.usda.gov/data-products/atlas-of-rural-and-small-town-america/" class="uri">https://www.ers.usda.gov/data-products/atlas-of-rural-and-small-town-america/</a></p>
+<p>These datasets were interesting to me as they contained data for the entire nation, but each observation was a small local. So this dataset gives a good representation of the country by area, population was not accounted for in this project. The unique county classifications and employment measurements sparked my curiosity. The other variables I acquired from these datasets were of poverty and income, as I was curious if they were correlated with a certain type of employment in a job sector.</p>
+</section>
+<section id="importing-data-and-packages" class="level2">
+<h2 class="anchored" data-anchor-id="importing-data-and-packages">Importing data and packages:</h2>
+<section id="packages" class="level3">
+<h3 class="anchored" data-anchor-id="packages">Packages</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="read-data" class="level3">
+<h3 class="anchored" data-anchor-id="read-data">Read Data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>jobs <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ExploratoryDataAnalysis/Jobs.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 3278 Columns: 70
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (3): FIPS, State, County
+dbl (67): UnempRate2019, UnempRate2018, UnempRate2017, UnempRate2016, UnempR...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>county <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ExploratoryDataAnalysis/County Classifications.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 3225 Columns: 45
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (3): FIPStxt, State, County
+dbl (42): RuralUrbanContinuumCode2013, UrbanInfluenceCode2013, RuralUrbanCon...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ExploratoryDataAnalysis/Income.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 3278 Columns: 11
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (3): FIPS, State, County
+dbl (8): MedHHInc, PerCapitaInc, PovertyUnder18Pct, PovertyAllAgesPct, Deep_...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+</section>
+<section id="select-applicable-variables" class="level3">
+<h3 class="anchored" data-anchor-id="select-applicable-variables">Select applicable variables</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>county2 <span class="ot">&lt;-</span> county <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">FIPS=</span>FIPStxt,State, County,Type_2015_Update) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type=</span><span class="fu">as.factor</span>(Type_2015_Update)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( <span class="at">County_type=</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="fu">recode</span>(Type_2015_Update,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"0"</span><span class="ot">=</span><span class="st">"Nonspecialized"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"1"</span><span class="ot">=</span><span class="st">"farm-dependent"</span>, </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"2"</span><span class="ot">=</span><span class="st">"Mining-dependent"</span>, </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"3"</span><span class="ot">=</span><span class="st">"Manufacturing-dependent"</span>, </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"4"</span><span class="ot">=</span><span class="st">"FedStagovernment-dependent"</span>, </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"5"</span><span class="ot">=</span><span class="st">"Recreation"</span> ) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Type_2015_Update) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( <span class="at">County_type=</span><span class="fu">as.factor</span>(County_type) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The county dataset provided a classification system of US counties with measures(from 2015) of earnings and employment to create county types. I then recoded the discrete numeric values into a readable categorical variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>jobs2 <span class="ot">&lt;-</span> jobs <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(FIPS,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>         State, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         County,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>         <span class="fu">contains</span>(<span class="st">"UnempRate"</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="fu">contains</span>(<span class="st">"PctEmp"</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="fu">contains</span>(<span class="st">"PctEmpChange"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( <span class="at">UnemploymentRate=</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>            (UnempRate2018<span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>             UnempRate2017<span class="sc">+</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>             UnempRate2016<span class="sc">+</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>             UnempRate2015<span class="sc">+</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>             UnempRate2014)<span class="sc">/</span><span class="dv">5</span> ) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"20"</span>))</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(jobs2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 3,278
+Columns: 14
+$ FIPS                &lt;chr&gt; "00000", "01000", "01001", "01003", "01005", "0100…
+$ State               &lt;chr&gt; "US", "AL", "AL", "AL", "AL", "AL", "AL", "AL", "A…
+$ County              &lt;chr&gt; "United States", "Alabama", "Autauga", "Baldwin", …
+$ PctEmpAgriculture   &lt;dbl&gt; 1.2845839, 1.0695774, 0.5513182, 0.9563178, 4.4036…
+$ PctEmpMining        &lt;dbl&gt; 0.54431821, 0.41893227, 0.33161996, 0.37160389, 0.…
+$ PctEmpConstruction  &lt;dbl&gt; 6.465190, 6.537221, 6.002321, 8.269525, 6.250000, …
+$ PctEmpManufacturing &lt;dbl&gt; 10.181289, 14.243842, 12.945614, 9.119824, 23.8876…
+$ PctEmpTrade         &lt;dbl&gt; 13.923130, 14.325943, 11.648151, 16.800351, 13.405…
+$ PctEmpTrans         &lt;dbl&gt; 5.227259, 5.366571, 6.984745, 4.925090, 6.915138, …
+$ PctEmpInformation   &lt;dbl&gt; 2.0716835, 1.5777856, 1.6290831, 1.3696870, 0.2408…
+$ PctEmpFIRE          &lt;dbl&gt; 6.557098, 5.537273, 6.259327, 7.398880, 3.967890, …
+$ PctEmpServices      &lt;dbl&gt; 49.11018, 45.48632, 43.39662, 45.72227, 33.71560, …
+$ PctEmpGovt          &lt;dbl&gt; 4.635271, 5.436537, 10.251202, 5.066450, 7.098624,…
+$ UnemploymentRate    &lt;dbl&gt; 4.94, 5.40, 4.72, 4.92, 7.72, 5.70, 4.88, 6.60, 6.…</code></pre>
+</div>
+</div>
+<p>The jobs dataset provided, for each county/FIPS code, a percent of the civilian labor force 16 and over employed in a given job sector as a multi-year average from 2014 to 2018. The dataset also provided yearly unemployment rates over 2014-2018. I created a variable as the multiyear average of unemployment rate from 2014-2018 for exploratory purposes.</p>
+<p>From the documentation of the data the categorical Job Sectors are as follows</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 71%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Job Sector Abbreviation</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Agriculture</td>
+<td>agriculture, forestry, fishing, and hunting</td>
+</tr>
+<tr class="even">
+<td>Mining</td>
+<td>mining, quarrying, oil and gas extraction</td>
+</tr>
+<tr class="odd">
+<td>Construction</td>
+<td>Construction</td>
+</tr>
+<tr class="even">
+<td>Manufacturing</td>
+<td>Manufacturing</td>
+</tr>
+<tr class="odd">
+<td>Trade</td>
+<td>wholesale and retail trade</td>
+</tr>
+<tr class="even">
+<td>Trans</td>
+<td>transportation, warehousing and utilities</td>
+</tr>
+<tr class="odd">
+<td>Information</td>
+<td>information</td>
+</tr>
+<tr class="even">
+<td>FIRE</td>
+<td>finance and insurance, and real estate and rental and leasing</td>
+</tr>
+<tr class="odd">
+<td>Services</td>
+<td>services</td>
+</tr>
+<tr class="even">
+<td>Govt</td>
+<td>public administration</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>income2 <span class="ot">&lt;-</span> income <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(FIPS,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>         State,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         County,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>         PerCapitaInc, </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">PerDeepPov=</span>Deep_Pov_All,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">PerChildrenDeepPov=</span>Deep_Pov_Children)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(income2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 3,278
+Columns: 6
+$ FIPS               &lt;chr&gt; "00000", "01000", "01001", "01003", "01005", "01007…
+$ State              &lt;chr&gt; "US", "AL", "AL", "AL", "AL", "AL", "AL", "AL", "AL…
+$ County             &lt;chr&gt; "United States", "Alabama", "Autauga", "Baldwin", "…
+$ PerCapitaInc       &lt;dbl&gt; 32621, 26846, 29372, 31203, 18461, 20199, 22656, 20…
+$ PerDeepPov         &lt;dbl&gt; 6.249590, 7.611623, 6.142609, 4.482528, 12.749387, …
+$ PerChildrenDeepPov &lt;dbl&gt; 8.598276, 11.591313, 8.910594, 6.214526, 26.709797,…</code></pre>
+</div>
+</div>
+<p>The income dataset provided, for each county/FIPS code, Per Capita Income, Deep Poverty, and Deep Child Poverty over the same multi-year average (2014 to 2018).</p>
+</section>
+<section id="tidy-data" class="level3">
+<h3 class="anchored" data-anchor-id="tidy-data">Tidy data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>jobs2_tidy <span class="ot">&lt;-</span> jobs2 <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="dv">4</span><span class="sc">:</span><span class="dv">13</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to=</span><span class="st">"PctEmployed_TYPE"</span>, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to=</span><span class="st">"PercentEmployed"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(PctEmployed_TYPE, </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">into=</span><span class="fu">c</span>(<span class="st">"rm"</span>,<span class="st">"PctEmployed_TYPE"</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep=</span><span class="dv">6</span> ) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>rm) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( <span class="at">PctEmployed_TYPE=</span><span class="fu">as.factor</span>(PctEmployed_TYPE) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>jobs</code> was in a wide format for percent employed in each job sector. So, a <code>pivot_longer()</code> was done to create a categorical variable for the type of percent employed in each sector. This was saved as a separate value so that analysis can be done with either format.</p>
+</section>
+</section>
+<section id="merge-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="merge-datasets">Merge datasets:</h2>
+<section id="find-overlap-of-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="find-overlap-of-datasets">Find overlap of datasets</h3>
+<section id="count-uinque-observations" class="level4">
+<h4 class="anchored" data-anchor-id="count-uinque-observations">Count uinque observations</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>jobs2_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(FIPS, State, County) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(n_distinct)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+   FIPS State County
+  &lt;int&gt; &lt;int&gt;  &lt;int&gt;
+1  3278    53   1947</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>county2 <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(FIPS, State, County) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(n_distinct)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+   FIPS State County
+  &lt;int&gt; &lt;int&gt;  &lt;int&gt;
+1  3225    52   1913</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>income2 <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(FIPS, State, County) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(n_distinct)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+   FIPS State County
+  &lt;int&gt; &lt;int&gt;  &lt;int&gt;
+1  3278    53   1947</code></pre>
+</div>
+</div>
+<p>Here there is not the same number of unique observations for all datasets, so lets find which values are missing.</p>
+</section>
+<section id="find-differences-in-fips" class="level4 unlisted unnumbered">
+<h4 class="unlisted unnumbered anchored" data-anchor-id="find-differences-in-fips">Find differences in FIPS</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anti_join</span>(jobs2_tidy, county2, <span class="at">by=</span><span class="st">"FIPS"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(FIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 530 × 6
+# Groups:   FIPS [53]
+   FIPS  State County        UnemploymentRate PctEmployed_TYPE PercentEmployed
+   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;                    &lt;dbl&gt; &lt;fct&gt;                      &lt;dbl&gt;
+ 1 00000 US    United States             4.94 Agriculture                1.28 
+ 2 00000 US    United States             4.94 Mining                     0.544
+ 3 00000 US    United States             4.94 Construction               6.47 
+ 4 00000 US    United States             4.94 Manufacturing             10.2  
+ 5 00000 US    United States             4.94 Trade                     13.9  
+ 6 00000 US    United States             4.94 Trans                      5.23 
+ 7 00000 US    United States             4.94 Information                2.07 
+ 8 00000 US    United States             4.94 FIRE                       6.56 
+ 9 00000 US    United States             4.94 Services                  49.1  
+10 00000 US    United States             4.94 Govt                       4.64 
+# ℹ 520 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anti_join</span>(income2, county2, <span class="at">by=</span><span class="st">"FIPS"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(FIPS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 53 × 6
+# Groups:   FIPS [53]
+   FIPS  State County               PerCapitaInc PerDeepPov PerChildrenDeepPov
+   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;                       &lt;dbl&gt;      &lt;dbl&gt;              &lt;dbl&gt;
+ 1 00000 US    United States               32621       6.25               8.60
+ 2 01000 AL    Alabama                     26846       7.61              11.6 
+ 3 02000 AK    Alaska                      35874       4.94               6.31
+ 4 04000 AZ    Arizona                     29265       7.50              10.2 
+ 5 05000 AR    Arkansas                    25635       7.25              10.3 
+ 6 06000 CA    California                  35021       6.25               8.04
+ 7 08000 CO    Colorado                    36415       4.97               5.75
+ 8 09000 CT    Connecticut                 43056       4.67               6.29
+ 9 10000 DE    Delaware                    33989       5.44               6.97
+10 11000 DC    District of Columbia        53321       9.20              13.6 
+# ℹ 43 more rows</code></pre>
+</div>
+</div>
+<p>The <code>county</code> dataset is the only dataset missing observations (53) which are for the state/federal cumulative statistics.</p>
+</section>
+<section id="find-missing-data" class="level4">
+<h4 class="anchored" data-anchor-id="find-missing-data">Find missing data</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>jobs2_tidy <span class="sc">%&gt;%</span>  </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">complete.cases</span>(jobs2_tidy)) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(FIPS) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 6
+# Groups:   FIPS [7]
+  FIPS  State County           UnemploymentRate PctEmployed_TYPE PercentEmployed
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;                       &lt;dbl&gt; &lt;fct&gt;                      &lt;dbl&gt;
+1 02010 AK    Aleutian Islands             NA   Agriculture                NA   
+2 02201 AK    Prince of Wales…             NA   Agriculture                NA   
+3 02232 AK    Skagway-Hoonah-…             NA   Agriculture                NA   
+4 02280 AK    Wrangell-Peters…             NA   Agriculture                NA   
+5 15005 HI    Kalawao                      NA   Agriculture                 1.75
+6 35039 NM    Rio Arriba                    7.1 Agriculture                NA   
+7 51515 VA    Bedford                      NA   Agriculture                NA   </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>county2 <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">complete.cases</span>(county2)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(FIPS) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 82 × 5
+# Groups:   FIPS [82]
+   FIPS  State County                          type  County_type
+   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;                           &lt;fct&gt; &lt;fct&gt;      
+ 1 02010 AK    Aleutian Islands                &lt;NA&gt;  &lt;NA&gt;       
+ 2 02201 AK    Prince of Wales-Outer Ketchikan &lt;NA&gt;  &lt;NA&gt;       
+ 3 02232 AK    Skagway-Hoonah-Angoon           &lt;NA&gt;  &lt;NA&gt;       
+ 4 02280 AK    Wrangell-Petersburg             &lt;NA&gt;  &lt;NA&gt;       
+ 5 72001 PR    Adjuntas                        &lt;NA&gt;  &lt;NA&gt;       
+ 6 72003 PR    Aguada                          &lt;NA&gt;  &lt;NA&gt;       
+ 7 72005 PR    Aguadilla                       &lt;NA&gt;  &lt;NA&gt;       
+ 8 72007 PR    Aguas Buenas                    &lt;NA&gt;  &lt;NA&gt;       
+ 9 72009 PR    Aibonito                        &lt;NA&gt;  &lt;NA&gt;       
+10 72011 PR    Añasco                          &lt;NA&gt;  &lt;NA&gt;       
+# ℹ 72 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>income2 <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">complete.cases</span>(income2)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(FIPS) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 6
+# Groups:   FIPS [7]
+  FIPS  State County                  PerCapitaInc PerDeepPov PerChildrenDeepPov
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;                          &lt;dbl&gt;      &lt;dbl&gt;              &lt;dbl&gt;
+1 02010 AK    Aleutian Islands                  NA      NA                    NA
+2 02201 AK    Prince of Wales-Outer …           NA      NA                    NA
+3 02232 AK    Skagway-Hoonah-Angoon             NA      NA                    NA
+4 02280 AK    Wrangell-Petersburg               NA      NA                    NA
+5 15005 HI    Kalawao                        47709       9.09                 NA
+6 35039 NM    Rio Arriba                        NA      NA                    NA
+7 51515 VA    Bedford                           NA      NA                    NA</code></pre>
+</div>
+</div>
+<p>There are 6 incomplete observations in <code>jobs</code>. 4 are in AK, 1 in NM, 1 in VA. These 6 observations are also missing from <code>income</code>. In addition to the priorly mentioned 6 missing observations in <code>income</code>, there is also 1 in HI that is missing. The 4 observations in AK that are missing from the prior 2 datasets are also missing for <code>county</code>, but <code>county</code> is also missing all the observations for PR.</p>
+</section>
+</section>
+<section id="merge-datasets-1" class="level3">
+<h3 class="anchored" data-anchor-id="merge-datasets-1">Merge datasets</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> county2 <span class="sc">%&gt;%</span> <span class="fu">full_join</span>(jobs2, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"FIPS"</span>,<span class="st">"State"</span>,<span class="st">"County"</span>)) <span class="sc">%&gt;%</span> <span class="fu">full_join</span>(income2,<span class="at">by=</span><span class="fu">c</span>(<span class="st">"FIPS"</span>,<span class="st">"State"</span>,<span class="st">"County"</span>))</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>datatidy <span class="ot">&lt;-</span> county2 <span class="sc">%&gt;%</span> <span class="fu">full_join</span>(jobs2_tidy, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"FIPS"</span>,<span class="st">"State"</span>,<span class="st">"County"</span>)) <span class="sc">%&gt;%</span> <span class="fu">full_join</span>(income2,<span class="at">by=</span><span class="fu">c</span>(<span class="st">"FIPS"</span>,<span class="st">"State"</span>,<span class="st">"County"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A full join by the county’s FIPS code was picked to preserve all the available data and remove entries with missing/incomplete information. These missing points should not have too much leverage later in the exploratory analysis.</p>
+</section>
+</section>
+<section id="summary-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="summary-statistics">Summary Statistics:</h2>
+<section id="percent-values-of-employment-sum-to-100" class="level3">
+<h3 class="anchored" data-anchor-id="percent-values-of-employment-sum-to-100">Percent values of employment sum to 100</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( <span class="at">pct_tot=</span>(PctEmpAgriculture<span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                     PctEmpMining<span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                     PctEmpConstruction<span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                     PctEmpManufacturing<span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                     PctEmpTrade<span class="sc">+</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>                     PctEmpTrans<span class="sc">+</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>                     PctEmpInformation<span class="sc">+</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>                     PctEmpFIRE<span class="sc">+</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>                     PctEmpServices<span class="sc">+</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>                     PctEmpGovt) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span> (FIPS,pct_tot) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( <span class="at">is100 =</span> (<span class="fu">round</span>(pct_tot,<span class="dv">5</span>)<span class="sc">==</span><span class="dv">100</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">sum_to_100=</span><span class="fu">sum</span>(is100), <span class="at">unequal_to_100=</span><span class="fu">sum</span>(<span class="sc">!</span>is100))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  sum_to_100 unequal_to_100
+       &lt;int&gt;          &lt;int&gt;
+1       3140              0</code></pre>
+</div>
+</div>
+<p>For the complete observations, the percent employed for each job sector sums to 100, confirming that there are only complete observations.</p>
+</section>
+<section id="the-most-common-county-type-by-state" class="level3">
+<h3 class="anchored" data-anchor-id="the-most-common-county-type-by-state">The most common county type by state</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  na.omit <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(State, County_type) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(State) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">MajorityOfCountiesType=</span>County_type,<span class="at">totalCountiesInState=</span><span class="fu">sum</span>(n), </span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">majority_county_count=</span>n) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n,<span class="sc">-</span>County_type) <span class="sc">%&gt;%</span>  </span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(State) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>( majority_county_count<span class="sc">==</span><span class="fu">max</span>(majority_county_count) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent_county_type=</span><span class="fu">round</span>(majority_county_count<span class="sc">/</span>totalCountiesInState,<span class="dv">4</span>)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(percent_county_type))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 55 × 5
+# Groups:   State [51]
+   State MajorityOfCountiesType     totalCountiesInState majority_county_count
+   &lt;chr&gt; &lt;fct&gt;                                     &lt;int&gt;                 &lt;int&gt;
+ 1 DC    FedStagovernment-dependent                    1                     1
+ 2 CT    Nonspecialized                                8                     7
+ 3 NJ    Nonspecialized                               21                    16
+ 4 ND    farm-dependent                               53                    35
+ 5 MA    Nonspecialized                               14                     9
+ 6 NE    farm-dependent                               93                    58
+ 7 SD    farm-dependent                               66                    41
+ 8 MS    Nonspecialized                               82                    50
+ 9 RI    Nonspecialized                                5                     3
+10 VT    Recreation                                   14                     8
+# ℹ 45 more rows
+# ℹ 1 more variable: percent_county_type &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>The above table illustrates each state’s total number of counties, and the type of their most prevalent county, if there are ties for the majority then all of the top ranking for that state are present. The table is arranged by percent of the state’s counties that are of the given majority type. Most of the states have a majority type of Nonspecialized or Recreation. There are very few states that have a majority of their counties devoted to Mining, Manufacturing or Government. The larger states (the ones with the most counties) tend to be mostly Nonspecialized. One of the most interesting find in the table is that Hawaii has 4 counties, 2 are government and the other 2 are recreation, so all of Hawaii’s counties are present in the above table.</p>
+</section>
+<section id="summary-statistics-for-nonemployment-variables" class="level3 unlisted unnumbered">
+<h3 class="unlisted unnumbered anchored" data-anchor-id="summary-statistics-for-nonemployment-variables">Summary Statistics for nonEmployment variables</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>datatidy <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>PercentEmployed) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_if</span>(is.numeric, </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="st">"sd"</span><span class="ot">=</span><span class="st">"sd"</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"mean"</span><span class="ot">=</span><span class="st">"mean"</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"med"</span><span class="ot">=</span><span class="st">"median"</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"max"</span><span class="ot">=</span><span class="st">"max"</span>,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"min"</span><span class="ot">=</span><span class="st">"min"</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">values_to=</span><span class="st">"statistic"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(name,<span class="at">into=</span><span class="fu">c</span>(<span class="st">"Variable"</span>,<span class="st">"stat_type"</span>), <span class="at">sep=</span><span class="st">"_"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Variable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 × 3
+   Variable           stat_type statistic
+   &lt;chr&gt;              &lt;chr&gt;         &lt;dbl&gt;
+ 1 PerCapitaInc       sd          6502.  
+ 2 PerCapitaInc       mean       27030.  
+ 3 PerCapitaInc       med        26244.  
+ 4 PerCapitaInc       max        72832   
+ 5 PerCapitaInc       min        10148   
+ 6 PerChildrenDeepPov sd             5.99
+ 7 PerChildrenDeepPov mean           9.55
+ 8 PerChildrenDeepPov med            8.54
+ 9 PerChildrenDeepPov max           50.5 
+10 PerChildrenDeepPov min            0   
+11 PerDeepPov         sd             3.34
+12 PerDeepPov         mean           6.68
+13 PerDeepPov         med            6.09
+14 PerDeepPov         max           33.2 
+15 PerDeepPov         min            0   
+16 UnemploymentRate   sd             1.81
+17 UnemploymentRate   mean           5.15
+18 UnemploymentRate   med            4.92
+19 UnemploymentRate   max           22.2 
+20 UnemploymentRate   min            1.76</code></pre>
+</div>
+</div>
+<p>The above table depicts the standard deviation, mean, median, maximium, and minium for all nonEmployment variables. The Per Capita Income statistics show that the maximium value is about 7 standard deviations from the mean, while the minimum is only about 2.5 standard deviations below the mean which will be explored further in the data visualization section. Both Unemployment Rate and the two measures of poverty also have maximums greatly above the means, for their given standard deviations. Given this information and the relations of mean and median then it is reasonable to predict that these variables will be right skewed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>datatidy <span class="sc">%&gt;%</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(FIPS,County,County_type,PctEmployed_TYPE,PercentEmployed) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(County_type, PctEmployed_TYPE) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_if</span>(is.numeric, <span class="fu">c</span>(<span class="st">"mean"</span><span class="ot">=</span><span class="st">"mean"</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean=</span><span class="fu">round</span>(mean,<span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from=</span><span class="st">"PctEmployed_TYPE"</span>, <span class="at">values_from=</span><span class="st">"mean"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 11
+# Groups:   County_type [6]
+  County_type     Agriculture Construction  FIRE  Govt Information Manufacturing
+  &lt;fct&gt;                 &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;
+1 farm-dependent        15.2          7.46  4.12  5.26        1.25          9.56
+2 FedStagovernme…        3.66         6.65  4.4   8.54        1.36          8.84
+3 Manufacturing-…        3.41         6.81  3.98  4.33        1.19         22.0 
+4 Mining-depende…        4.67         7.82  3.66  5.68        1.18          7   
+5 Nonspecialized         3.1          7.25  5.03  5.21        1.49         12.4 
+6 Recreation             3.53         8.72  4.98  5.6         1.48          8.74
+# ℹ 4 more variables: Mining &lt;dbl&gt;, Services &lt;dbl&gt;, Trade &lt;dbl&gt;, Trans &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>The above table illustrates the mean percentage employed in each job sector for each different county type. The Services sector appears to always have a large majority of the employment regardless of the county type. And, for some job sectors if they are of the similar/related to the county type they have a larger mean percent employed, for instance Agriculture has a higher value for the farm-dependent counties.</p>
+</section>
+</section>
+<section id="data-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="data-visualization">Data Visualization:</h2>
+<section id="heatmap" class="level3">
+<h3 class="anchored" data-anchor-id="heatmap">Heatmap</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>cormat <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select_if</span>(is.numeric) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">use=</span><span class="st">"pair"</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>tidycor <span class="ot">&lt;-</span> cormat <span class="sc">%&gt;%</span> </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  as.data.frame <span class="sc">%&gt;%</span> </span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"var1"</span>) <span class="sc">%&gt;%</span>  </span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="at">names_to=</span><span class="st">"var2"</span>,<span class="at">values_to=</span><span class="st">"correlation"</span>)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tidycor) <span class="sc">+</span> </span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x=</span>var1,<span class="at">y=</span>var2, <span class="at">fill=</span>correlation) <span class="sc">+</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">30</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Correlation Matrix for all variables"</span>) <span class="sc">+</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>,</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">lwd =</span> <span class="fl">0.5</span>,</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">linetype =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span> </span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"plasma"</span>) <span class="sc">+</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(correlation,<span class="dv">2</span>)), <span class="at">color=</span><span class="st">"white"</span>,<span class="at">size=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ExploratoryDataAnalysis_files/figure-html/heatmap-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="plots" class="level3">
+<h3 class="anchored" data-anchor-id="plots">Plots</h3>
+<section id="stacked-barplot" class="level4">
+<h4 class="anchored" data-anchor-id="stacked-barplot">Stacked Barplot</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>datatidy <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">complete.cases</span>(datatidy)) <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>County_type,<span class="at">y=</span>PercentEmployed,<span class="at">fill=</span>PctEmployed_TYPE)) <span class="sc">+</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Average Percent Employed in each Job Sector for each given County Type"</span>)<span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"summary"</span>, <span class="at">fun=</span><span class="st">"median"</span>, <span class="at">position=</span><span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="fl">22.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Percent Employted Type"</span>) <span class="sc">+</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Median Percent Employed"</span>) <span class="sc">+</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"County Type"</span>)<span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ExploratoryDataAnalysis_files/figure-html/barplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot above illustrates median percentage employed in each job sector for each different county type, put on a percentage scale. One of the first relationships to observe is that employment in the mining sector is typically very low across all the county types, the exception as expected is the Mining-Dependant counties. This same pattern occurs for the Agriculture job sector and the Farm-Dependent counties, and it also occurs with Manufacturing sector and Manufacturing-Dependant counties. The Trans, Trade, Govt, Information, FIRE, and Construction job sectors all appear to have a very similar employment rates across all the county types. The Services job sector takes a large portion of all employment in every county with some variance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>datatidy <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span>County_type,<span class="at">y=</span>PerCapitaInc,<span class="at">fill=</span>County_type) ) <span class="sc">+</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Pastel2"</span>) <span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">alpha=</span>.<span class="dv">5</span>,<span class="at">adjust=</span>.<span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span>.<span class="dv">3</span>,<span class="at">outlier.alpha =</span> .<span class="dv">05</span>) <span class="sc">+</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">30</span>, <span class="at">hjust=</span><span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)<span class="sc">+</span> </span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">80000</span>,<span class="dv">10000</span>)) <span class="sc">+</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"County Type"</span>) <span class="sc">+</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Per Capita Income"</span>) <span class="sc">+</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Per Capita Income by County Type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ExploratoryDataAnalysis_files/figure-html/violin_plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot above depicts the density of Counties’ Per Capita Income overlayed with a boxplot, separated by the county type. Each county type has outliers much larger than the mean, but it is most prevalent in the Federal/State Government, Nonspecialized, and Recreation County types. Both the Mining and Farm Dependent county types have larger densities around their means, compared to other groups where there is a more evenly distribution across the IQR.</p>
+</section>
+</section>
+</section>
+<section id="pca-dimensionality-reduction" class="level2">
+<h2 class="anchored" data-anchor-id="pca-dimensionality-reduction">PCA Dimensionality Reduction:</h2>
+<section id="data-preparation" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparation">Data Preparation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>pca_dat <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>( <span class="at">PerCapitaInc=</span>(<span class="fu">rank</span>(PerCapitaInc)<span class="sc">/</span><span class="fu">length</span>(PerCapitaInc))<span class="sc">*</span><span class="dv">100</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>All the selected variables are percentages, besides Per Capita Income. To put them on the same scale, Per Capita Income was given percentiles over the range 0 to 100.</p>
+</section>
+<section id="perform-pca" class="level3">
+<h3 class="anchored" data-anchor-id="perform-pca">Perform PCA</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>data_pca <span class="ot">&lt;-</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  pca_dat <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">princomp</span>() </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data_pca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                           Comp.1     Comp.2     Comp.3     Comp.4     Comp.5
+Standard deviation     29.2702350 8.56424651 7.68985909 4.99040321 4.32662727
+Proportion of Variance  0.8018153 0.06864363 0.05534249 0.02330737 0.01751947
+Cumulative Proportion   0.8018153 0.87045892 0.92580140 0.94910877 0.96662824
+                            Comp.6      Comp.7      Comp.8      Comp.9
+Standard deviation     3.121456421 3.021739991 2.397746391 2.012677740
+Proportion of Variance 0.009118774 0.008545473 0.005380571 0.003791145
+Cumulative Proportion  0.975747011 0.984292484 0.989673055 0.993464200
+                           Comp.10     Comp.11     Comp.12      Comp.13
+Standard deviation     1.693410754 1.343684508 1.311496455 0.7683802310
+Proportion of Variance 0.002683778 0.001689727 0.001609742 0.0005525534
+Cumulative Proportion  0.996147978 0.997837705 0.999447447 1.0000000000
+                            Comp.14
+Standard deviation     1.604685e-07
+Proportion of Variance 2.409914e-17
+Cumulative Proportion  1.000000e+00</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>data_pca<span class="sc">$</span>loadings[<span class="dv">0</span><span class="sc">:</span><span class="dv">13</span>,<span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                           Comp.1      Comp.2        Comp.3        Comp.4
+PctEmpAgriculture    0.0084901049  0.41057340  0.5894542455  0.1694774821
+PctEmpMining         0.0078914988  0.01657434  0.1517254324 -0.0156807576
+PctEmpConstruction  -0.0003991241  0.02087666  0.0400933535 -0.0728817449
+PctEmpManufacturing  0.0445770916  0.42360350 -0.7680925585  0.1077846314
+PctEmpTrade          0.0012735157 -0.01910355 -0.0594706007 -0.0445961630
+PctEmpTrans          0.0081617573  0.04464634  0.0317068897 -0.0001245995
+PctEmpInformation   -0.0088145759 -0.01627969 -0.0011945891 -0.0095683714
+PctEmpFIRE          -0.0311941444 -0.05147966 -0.0208963852 -0.0141417086
+PctEmpServices      -0.0510225697 -0.75682140 -0.1040274222 -0.1590286844
+PctEmpGovt           0.0210364458 -0.07258994  0.1407016346  0.0387599159
+UnemploymentRate     0.0308530498 -0.06082507 -0.0207126785  0.0817257961
+PerCapitaInc        -0.9858236691  0.02397327 -0.0244387177  0.1562059416
+PerDeepPov           0.0715759748 -0.15342295  0.0008238906  0.3760549834
+                         Comp.5       Comp.6
+PctEmpAgriculture    0.56372441  0.108194110
+PctEmpMining        -0.54496989  0.502445234
+PctEmpConstruction  -0.17916413 -0.080287533
+PctEmpManufacturing  0.22838907 -0.002188520
+PctEmpTrade         -0.12372519  0.192630338
+PctEmpTrans         -0.18412846 -0.020448124
+PctEmpInformation    0.00743952 -0.008152730
+PctEmpFIRE          -0.02103559 -0.001692149
+PctEmpServices       0.44794824  0.123708173
+PctEmpGovt          -0.19447797 -0.814208801
+UnemploymentRate    -0.06038535 -0.090800922
+PerCapitaInc        -0.02753944 -0.012631883
+PerDeepPov           0.03586557  0.063416993</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>PC_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PC1=</span>data_pca<span class="sc">$</span>scores[, <span class="dv">1</span>],</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">PC2=</span>data_pca<span class="sc">$</span>scores[, <span class="dv">2</span>],</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">PC3=</span>data_pca<span class="sc">$</span>scores[, <span class="dv">3</span>],</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">PC4=</span>data_pca<span class="sc">$</span>scores[, <span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="scree-plot" class="level3">
+<h3 class="anchored" data-anchor-id="scree-plot">Scree Plot</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>eigval<span class="ot">&lt;-</span>data_pca<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>varprop<span class="ot">=</span><span class="fu">round</span>(eigval<span class="sc">/</span><span class="fu">sum</span>(eigval), <span class="dv">2</span>) </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>varprop, <span class="at">x=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>), <span class="at">stat=</span><span class="st">"identity"</span>) <span class="sc">+</span> </span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span> </span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks=</span><span class="fu">seq</span>(<span class="dv">0</span>, .<span class="dv">6</span>, .<span class="dv">2</span>), <span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span>   </span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ExploratoryDataAnalysis_files/figure-html/scree_plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based ont the PCA’s summary, the first 2 Principal Components together explain 80% of the variance. Also illustrated above, the Scree Plot levels off after the second principal component. But, for exploratory purposes PC3 and PC4 will be included in the rest of the analysis.</p>
+</section>
+<section id="pc1-and-pc2" class="level3">
+<h3 class="anchored" data-anchor-id="pc1-and-pc2">PC1 and PC2</h3>
+<section id="loading-plots-for-pc1-and-pc2" class="level4">
+<h4 class="anchored" data-anchor-id="loading-plots-for-pc1-and-pc2">Loading Plots for PC1 and PC2</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>data_pca<span class="sc">$</span>loadings[<span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">%&gt;%</span> as.data.frame <span class="sc">%&gt;%</span> rownames_to_column <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="dv">0</span>), <span class="at">lty=</span><span class="dv">5</span>) <span class="sc">+</span>   </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="dv">0</span>), <span class="at">lty=</span><span class="dv">5</span>) <span class="sc">+</span> </span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"PC2"</span>) <span class="sc">+</span> </span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"PC1"</span>) <span class="sc">+</span>   </span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="dv">0</span>, <span class="at">y=</span><span class="dv">0</span>, <span class="at">xend=</span>Comp<span class="fl">.1</span>, <span class="at">yend=</span>Comp<span class="fl">.2</span>), <span class="at">arrow=</span><span class="fu">arrow</span>(), <span class="at">col=</span><span class="st">"red"</span>) <span class="sc">+</span>   </span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x=</span>Comp<span class="fl">.1</span><span class="sc">*</span>.<span class="dv">8</span>, <span class="at">y=</span>Comp<span class="fl">.2</span><span class="sc">*</span>.<span class="dv">8</span>, <span class="at">label=</span>rowname), <span class="at">size =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ExploratoryDataAnalysis_files/figure-html/pc1_pc2_load-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The loading plot illustrates the the contribution of each Variable to each Principal Component. The Per Capita Income variable is the main variable associated with PC1. Percent employed in Agriculture, Services, and Manufacturing were the major contributors for PC2.</p>
+</section>
+<section id="score-plots-for-pc1-and-pc2" class="level4 unlisted unnumbered">
+<h4 class="unlisted unnumbered anchored" data-anchor-id="score-plots-for-pc1-and-pc2">Score Plots for PC1 and PC2</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(PC_data, <span class="fu">aes</span>(PC1, PC2)) <span class="sc">+</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="fu">aes</span>(<span class="at">color=</span>County_type) ) <span class="sc">+</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>County_type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ExploratoryDataAnalysis_files/figure-html/pc1_pc2_score2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Each point represents a singular FIPS code in the score plot above, but it was colored and separated by the County Type (which was not included in the PCA) to find if the PCA was able to discriminate between the different types. It was unable to perform a clear differentiation between categories, as there is no distinct grouping as there is much overlap between County Types with very similar cluster centers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(PC_data, <span class="fu">aes</span>(PC1, PC2)) <span class="sc">+</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">color=</span>PctEmpServices ,<span class="at">size=</span>PerCapitaInc) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">alpha=</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_continuous</span>(<span class="at">low=</span><span class="st">"blue"</span>,<span class="at">high=</span><span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>County_type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ExploratoryDataAnalysis_files/figure-html/pc1_pc2_score1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The above score plot above adds Percent employed in the sevices sector (a main contributing factor in PC2) mapped to color, and therefore the variance explained by tis variable is illustrated along the PC2 axis. This depiction was also applied to PC1 for the Per Capita Income mapped to size. This plot is just a visual representation of the singular major factors of variation along PC1 and PC2.</p>
+</section>
+</section>
+<section id="pc3-and-pc4" class="level3">
+<h3 class="anchored" data-anchor-id="pc3-and-pc4">PC3 and PC4</h3>
+<section id="loading-plots-for-pc3-and-pc4" class="level4">
+<h4 class="anchored" data-anchor-id="loading-plots-for-pc3-and-pc4">Loading Plots for PC3 and PC4</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>data_pca<span class="sc">$</span>loadings[<span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>] <span class="sc">%&gt;%</span> as.data.frame <span class="sc">%&gt;%</span> rownames_to_column <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept=</span><span class="dv">0</span>), <span class="at">lty=</span><span class="dv">5</span>) <span class="sc">+</span>   </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept=</span><span class="dv">0</span>), <span class="at">lty=</span><span class="dv">5</span>) <span class="sc">+</span> </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"PC4"</span>) <span class="sc">+</span> </span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"PC3"</span>) <span class="sc">+</span>   </span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="dv">0</span>, <span class="at">y=</span><span class="dv">0</span>, <span class="at">xend=</span>Comp<span class="fl">.3</span>, <span class="at">yend=</span>Comp<span class="fl">.4</span>), <span class="at">arrow=</span><span class="fu">arrow</span>(), <span class="at">col=</span><span class="st">"red"</span>) <span class="sc">+</span>   </span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x=</span>Comp<span class="fl">.3</span><span class="sc">*</span>.<span class="dv">6</span>, <span class="at">y=</span>Comp<span class="fl">.4</span><span class="sc">*</span>.<span class="dv">85</span>, <span class="at">label=</span>rowname), <span class="at">size =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ExploratoryDataAnalysis_files/figure-html/pc3_pc4_loading-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This second loading plot illustrates the the next two Principal Components. The Pecerent Employed in Manufacturing and Agriculture are the main variables associated with PC3. Percent of Children in Deep Poverty and Percent of people in Deep Poverty were the major contributors for PC4.</p>
+</section>
+<section id="score-plots-for-pc3-and-pc4" class="level4">
+<h4 class="anchored" data-anchor-id="score-plots-for-pc3-and-pc4">Score Plots for PC3 and PC4</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(PC_data, <span class="fu">aes</span>(PC3, PC4)) <span class="sc">+</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>PctEmpManufacturing,<span class="at">size=</span>PctEmpAgriculture))  <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_continuous</span>(<span class="at">low=</span><span class="st">"blue"</span>,<span class="at">high=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ExploratoryDataAnalysis_files/figure-html/pc3_pc4_score-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The score plot above has Percent employed in the Manufacturing sector (a main contributing factor in PC3) mapped to color, and therefore the varience explained by this variable is illustrated along the PC3 axis. This depiction was also applied for the other coontributing variable for PC3: the Percent employed in the Agriculture sector. This was mapped to size to be a visual representation of how the loading values apply to the PCA score plot.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

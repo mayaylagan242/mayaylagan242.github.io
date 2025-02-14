@@ -5,4 +5,6 @@ README.html
 _freeze/
 
 projects/data/
-projects/.jupyter_cache/
+projects/*_cache/
+projects/*_files/
+

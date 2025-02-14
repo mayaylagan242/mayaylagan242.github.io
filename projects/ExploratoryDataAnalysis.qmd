@@ -1,0 +1,497 @@
+---
+title: 'Exploratory Data Analysis'
+author: "Maya"
+date: '2021-01-01'
+# image: "/images/projects/heatmap-1.png"
+description: ""
+tags:
+  - Markdown syntax
+  - Tidying Data
+  - Joins/Merge
+  - PCA
+  - ANOVA
+  - Plotting
+execute: 
+  freeze: true
+  cache: true
+---
+
+
+```{r}
+#| label: setup
+#| include: FALSE
+
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
+```
+
+## Introduction:
+
+The data used in this project was collected from the USDA's Atlas of Rural and Small-Town America. Located at: <https://www.ers.usda.gov/data-products/atlas-of-rural-and-small-town-america/>
+
+These datasets were interesting to me as they contained data for the entire nation, but each observation was a small local. So this dataset gives a good representation of the country by area, population was not accounted for in this project.  The unique county classifications and employment measurements sparked my curiosity. The other variables I acquired from these datasets were of poverty and income, as I was curious if they were correlated with a certain type of employment in a job sector.
+
+## Importing data and packages:
+
+### Packages
+
+```{r}
+#| label: Packages
+
+library(tidyverse)
+```
+
+### Read Data
+
+```{r}
+#| label: Data
+
+jobs <- read_csv("data/ExploratoryDataAnalysis/Jobs.csv")
+county <- read_csv("data/ExploratoryDataAnalysis/County Classifications.csv")
+income <- read_csv("data/ExploratoryDataAnalysis/Income.csv")
+```
+
+### Select applicable variables 
+
+```{r}
+#| label: clean_county
+
+county2 <- county %>% 
+  select(FIPS=FIPStxt,State, County,Type_2015_Update) %>% 
+  mutate(type=as.factor(Type_2015_Update)) %>% 
+  mutate( County_type=
+            recode(Type_2015_Update,
+                   "0"="Nonspecialized",
+                   "1"="farm-dependent", 
+                   "2"="Mining-dependent", 
+                   "3"="Manufacturing-dependent", 
+                   "4"="FedStagovernment-dependent", 
+                   "5"="Recreation" ) ) %>% 
+  select(-Type_2015_Update) %>% 
+  mutate( County_type=as.factor(County_type) )
+```
+
+The county dataset provided a classification system of US counties with measures(from 2015) of earnings and employment to create county types. I then recoded the discrete numeric values into a readable categorical variable.
+
+```{r}
+#| label: clean_jobs
+
+jobs2 <- jobs %>% 
+  select(FIPS,
+         State, 
+         County,
+         contains("UnempRate"),
+         contains("PctEmp"),
+         -contains("PctEmpChange")) %>% 
+  mutate( UnemploymentRate=
+            (UnempRate2018+
+             UnempRate2017+
+             UnempRate2016+
+             UnempRate2015+
+             UnempRate2014)/5 ) %>% 
+  select(-contains("20"))
+
+glimpse(jobs2)
+```
+
+The jobs dataset provided, for each county/FIPS code, a percent of the civilian labor force 16 and over employed in a given job sector as a multi-year average from 2014 to 2018. The dataset also provided yearly unemployment rates over 2014-2018. I created a variable as the multiyear average of unemployment rate from 2014-2018 for exploratory purposes.
+
+From the documentation of the data the categorical Job Sectors are as follows
+
+| Job Sector Abbreviation | Meaning                                                       |
+|-------------------------|---------------------------------------------------------------|
+| Agriculture             | agriculture, forestry, fishing, and hunting                   |
+| Mining                  | mining, quarrying, oil and gas extraction                     |
+| Construction            | Construction                                                  |
+| Manufacturing           | Manufacturing                                                 |
+| Trade                   | wholesale and retail trade                                    |
+| Trans                   | transportation, warehousing and utilities                     |
+| Information             | information                                                   |
+| FIRE                    | finance and insurance, and real estate and rental and leasing |
+| Services                | services                                                      |
+| Govt                    | public administration                                         |
+
+```{r}
+#| label: clean_income
+
+income2 <- income %>% 
+  select(FIPS,
+         State,
+         County,
+         PerCapitaInc, 
+         PerDeepPov=Deep_Pov_All,
+         PerChildrenDeepPov=Deep_Pov_Children)
+
+glimpse(income2)
+```
+
+The income dataset provided, for each county/FIPS code, Per Capita Income, Deep Poverty, and Deep Child Poverty over the same multi-year average (2014 to 2018).
+
+### Tidy data
+
+```{r}
+#| label: tidy_jobs
+
+jobs2_tidy <- jobs2 %>% 
+  pivot_longer(4:13, 
+               names_to="PctEmployed_TYPE", 
+               values_to="PercentEmployed") %>% 
+  separate(PctEmployed_TYPE, 
+           into=c("rm","PctEmployed_TYPE"),
+           sep=6 ) %>% 
+  select(-rm) %>% 
+  mutate( PctEmployed_TYPE=as.factor(PctEmployed_TYPE) )
+```
+
+`jobs` was in a wide format for percent employed in each job sector. So, a `pivot_longer()` was done to create a categorical variable for the type of percent employed in each sector. This was saved as a separate value so that analysis can be done with either format.
+
+## Merge datasets:
+
+### Find overlap of datasets
+
+#### Count uinque observations
+
+```{r}
+#| label: join_prep
+
+jobs2_tidy %>% 
+  select(FIPS, State, County) %>% 
+  summarise_all(n_distinct)
+county2 %>% 
+  select(FIPS, State, County) %>% 
+  summarise_all(n_distinct)
+income2 %>% 
+  select(FIPS, State, County) %>% 
+  summarise_all(n_distinct)
+```
+Here there is not the same number of unique observations for all datasets, so lets find which values are missing.
+
+
+#### Find differences in FIPS {.unlisted .unnumbered}
+
+```{r, find_diff}
+#| label: find_diff
+
+anti_join(jobs2_tidy, county2, by="FIPS") %>% 
+  group_by(FIPS)
+anti_join(income2, county2, by="FIPS") %>% 
+  group_by(FIPS)
+```
+
+The `county` dataset is the only dataset missing observations (53) which are for the state/federal cumulative statistics.
+
+#### Find missing data
+
+```{r}
+#| label: find_missing_data
+
+jobs2_tidy %>%  
+  filter(!complete.cases(jobs2_tidy)) %>% 
+  group_by(FIPS) %>% 
+  slice(0:1) 
+county2 %>% 
+  filter(!complete.cases(county2)) %>% 
+  group_by(FIPS) %>% 
+  slice(0:1)
+income2 %>% 
+  filter(!complete.cases(income2)) %>% 
+  group_by(FIPS) %>% 
+  slice(0:1)
+```
+
+There are 6 incomplete observations in `jobs`. 4 are in AK, 1 in NM, 1 in VA. These 6 observations are also missing from `income`. In addition to the priorly mentioned 6 missing observations in `income`, there is also 1 in HI that is missing. The 4 observations in AK that are missing from the prior 2 datasets are also missing for `county`, but `county` is also missing all the observations for PR.
+
+### Merge datasets
+
+```{r}
+#| label: merge
+
+data <- county2 %>% full_join(jobs2, by=c("FIPS","State","County")) %>% full_join(income2,by=c("FIPS","State","County"))
+datatidy <- county2 %>% full_join(jobs2_tidy, by=c("FIPS","State","County")) %>% full_join(income2,by=c("FIPS","State","County"))
+
+```
+
+A full join by the county's FIPS code was picked to preserve all the available data and remove entries with missing/incomplete information.  These missing points should not have too much leverage later in the exploratory analysis.
+
+## Summary Statistics:
+
+### Percent values of employment sum to 100
+
+```{r}
+#| label: sum_stat1
+
+data %>% 
+  na.omit() %>% 
+  mutate( pct_tot=(PctEmpAgriculture+
+                     PctEmpMining+
+                     PctEmpConstruction+
+                     PctEmpManufacturing+
+                     PctEmpTrade+
+                     PctEmpTrans+
+                     PctEmpInformation+
+                     PctEmpFIRE+
+                     PctEmpServices+
+                     PctEmpGovt) ) %>% 
+  select (FIPS,pct_tot) %>% 
+  mutate( is100 = (round(pct_tot,5)==100) ) %>% 
+  summarise(sum_to_100=sum(is100), unequal_to_100=sum(!is100))
+```
+
+For the complete observations, the percent employed for each job sector sums to 100, confirming that there are only complete observations.
+
+### The most common county type by state
+
+```{r}
+#| label: sum_stat2
+
+data %>% 
+  na.omit %>% 
+  group_by(State, County_type) %>% 
+  count() %>% 
+  group_by(State) %>% 
+  mutate(MajorityOfCountiesType=County_type,totalCountiesInState=sum(n), 
+         majority_county_count=n) %>% 
+  select(-n,-County_type) %>%  
+  group_by(State) %>% 
+  filter( majority_county_count==max(majority_county_count) ) %>% 
+  mutate(percent_county_type=round(majority_county_count/totalCountiesInState,4)*100) %>% 
+  arrange(desc(percent_county_type))
+```
+
+The above table illustrates each state's total number of counties, and the type of their most prevalent county, if there are ties for the majority then all of the top ranking for that state are present. The table is arranged by percent of the state's counties that are of the given majority type. Most of the states have a majority type of Nonspecialized or Recreation. There are very few states that have a majority of their counties devoted to Mining, Manufacturing or Government. The larger states (the ones with the most counties) tend to be mostly Nonspecialized. One of the most interesting find in the table is that Hawaii has 4 counties, 2 are government and the other 2 are recreation, so all of Hawaii's counties are present in the above table.
+
+### Summary Statistics for nonEmployment variables {.unlisted .unnumbered}
+
+```{r}
+#| label: sum_stat3
+
+datatidy %>% 
+  na.omit() %>% 
+  select(-PercentEmployed) %>% 
+  summarise_if(is.numeric, 
+               c("sd"="sd",
+                 "mean"="mean",
+                 "med"="median",
+                 "max"="max",
+                 "min"="min") ) %>% 
+  pivot_longer(1:20, values_to="statistic") %>% 
+  separate(name,into=c("Variable","stat_type"), sep="_") %>% 
+  arrange(Variable)
+
+```
+
+The above table depicts the standard deviation, mean, median, maximium, and minium for all nonEmployment variables. The Per Capita Income statistics show that the maximium value is about 7 standard deviations from the mean, while the minimum is only about 2.5 standard deviations below the mean which will be explored further in the data visualization section. Both Unemployment Rate and the two measures of poverty also have maximums greatly above the means, for their given standard deviations. Given this information and the relations of mean and median then it is reasonable to predict that these variables will be right skewed.
+
+```{r}
+#| label: sum_stat4
+
+datatidy %>% 
+  na.omit() %>% 
+  select(FIPS,County,County_type,PctEmployed_TYPE,PercentEmployed) %>% 
+  group_by(County_type, PctEmployed_TYPE) %>% 
+  summarise_if(is.numeric, c("mean"="mean") ) %>% 
+  mutate(mean=round(mean,2)) %>% 
+  pivot_wider(names_from="PctEmployed_TYPE", values_from="mean") %>% 
+  print()
+```
+
+The above table illustrates the mean percentage employed in each job sector for each different county type. The Services sector appears to always have a large majority of the employment regardless of the county type. And, for some job sectors if they are of the similar/related to the county type they have a larger mean percent employed, for instance Agriculture has a higher value for the farm-dependent counties.
+
+## Data Visualization:
+
+### Heatmap
+
+```{r}
+#| label: heatmap
+
+cormat <- data %>% 
+  select_if(is.numeric) %>% 
+  cor(use="pair")
+
+tidycor <- cormat %>% 
+  as.data.frame %>% 
+  rownames_to_column("var1") %>%  
+  pivot_longer(-1,names_to="var2",values_to="correlation")
+
+
+ggplot(tidycor) + 
+  aes(x=var1,y=var2, fill=correlation) +
+  theme_bw() +
+  theme( axis.text.x = element_text(angle = 30, vjust = 1, hjust=1)) +
+  labs(title = "Correlation Matrix for all variables") +
+  geom_tile(color = "white",
+            lwd = 0.5,
+            linetype = 1) +
+  coord_fixed() + 
+  scale_fill_viridis_c(option = "plasma") +
+  geom_text(aes(label = round(correlation,2)), color="white",size=2)
+
+
+```
+
+### Plots
+
+#### Stacked Barplot 
+
+```{r}
+#| label: barplot
+
+datatidy %>% filter(complete.cases(datatidy)) %>% ggplot(aes(x=County_type,y=PercentEmployed,fill=PctEmployed_TYPE)) +
+  labs(title="Average Percent Employed in each Job Sector for each given County Type")+
+  geom_bar(stat="summary", fun="median", position="fill") +
+  theme(axis.text.x = element_text(angle = 22.5, hjust=1))+
+  labs(fill = "Percent Employted Type") +
+  ylab("Median Percent Employed") +
+  xlab("County Type")+
+  scale_fill_brewer(palette = "Set3")
+```
+
+The plot above illustrates median percentage employed in each job sector for each different county type, put on a percentage scale. One of the first relationships to observe is that employment in the mining sector is typically very low across all the county types, the exception as expected is the Mining-Dependant counties. This same pattern occurs for the Agriculture job sector and the Farm-Dependent counties, and it also occurs with Manufacturing sector and Manufacturing-Dependant counties. The Trans, Trade, Govt, Information, FIRE, and Construction job sectors all appear to have a very similar employment rates across all the county types. The Services job sector takes a large portion of all employment in every county with some variance.
+
+
+```{r}
+#| label: violin_plot
+
+datatidy %>% na.omit() %>% ggplot( aes(x=County_type,y=PerCapitaInc,fill=County_type) ) +
+  scale_fill_brewer(palette = "Pastel2") +
+  geom_violin(alpha=.5,adjust=.6) +
+  geom_boxplot(width=.3,outlier.alpha = .05) +
+  theme(axis.text.x = element_text(angle = 30, hjust=1))+
+  theme(legend.position = "none")+ 
+  scale_y_continuous(breaks=seq(0,80000,10000)) +
+  xlab("County Type") +
+  ylab("Per Capita Income") +
+  labs(title="Per Capita Income by County Type")
+
+```
+
+The plot above depicts the density of Counties' Per Capita Income overlayed with a boxplot, separated by the county type. Each county type has outliers much larger than the mean, but it is most prevalent in the Federal/State Government, Nonspecialized, and Recreation County types. Both the Mining and Farm Dependent county types have larger densities around their means, compared to other groups where there is a more evenly distribution across the IQR.
+
+## PCA Dimensionality Reduction:
+
+### Data Preparation
+
+```{r}
+#| label: data_prep
+
+pca_dat <- data %>% 
+  na.omit() %>% 
+  select(-(1:5) ) %>% 
+  mutate( PerCapitaInc=(rank(PerCapitaInc)/length(PerCapitaInc))*100 )
+```
+
+All the selected variables are percentages, besides Per Capita Income. To put them on the same scale, Per Capita Income was given percentiles over the range 0 to 100.
+
+### Perform PCA
+
+```{r}
+#| label: PCA
+
+data_pca <- 
+  pca_dat %>% 
+  princomp() 
+
+summary(data_pca)
+data_pca$loadings[0:13,0:6]
+
+PC_data <- data %>% 
+  na.omit() %>% 
+  mutate(PC1=data_pca$scores[, 1],
+         PC2=data_pca$scores[, 2],
+         PC3=data_pca$scores[, 3],
+         PC4=data_pca$scores[, 4])
+```
+
+### Scree Plot
+
+```{r}
+#| label: scree_plot
+
+eigval<-data_pca$sdev^2
+varprop=round(eigval/sum(eigval), 2) 
+
+ggplot() + 
+  geom_line(aes(y=varprop, x=1:14), stat="identity") + 
+  xlab("") + 
+  scale_y_continuous(breaks=seq(0, .6, .2), labels = scales::percent) +   
+  scale_x_continuous(breaks=1:10)
+
+```
+
+Based ont the PCA's summary, the first 2 Principal Components together explain 80% of the variance. Also illustrated above, the Scree Plot levels off after the second principal component. But, for exploratory purposes PC3 and PC4 will be included in the rest of the analysis.
+
+### PC1 and PC2
+
+#### Loading Plots for PC1 and PC2 
+
+```{r}
+#| label: pc1_pc2_load
+
+data_pca$loadings[1:14, 1:2] %>% as.data.frame %>% rownames_to_column %>% ggplot() + 
+  geom_hline(aes(yintercept=0), lty=5) +   
+  geom_vline(aes(xintercept=0), lty=5) + 
+  ylab("PC2") + 
+  xlab("PC1") +   
+  geom_segment(aes(x=0, y=0, xend=Comp.1, yend=Comp.2), arrow=arrow(), col="red") +   
+  geom_label(aes(x=Comp.1*.8, y=Comp.2*.8, label=rowname), size = 3)
+
+```
+
+The loading plot illustrates the the contribution of each Variable to each Principal Component. The Per Capita Income variable is the main variable associated with PC1. Percent employed in Agriculture, Services, and Manufacturing were the major contributors for PC2.
+
+#### Score Plots for PC1 and PC2 {.unlisted .unnumbered}
+
+```{r}
+#| label: pc1_pc2_score2
+
+ggplot(PC_data, aes(PC1, PC2)) + 
+  geom_point( aes(color=County_type) ) +
+  facet_wrap(~County_type)
+```
+
+Each point represents a singular FIPS code in the score plot above, but it was colored and separated by the County Type (which was not included in the PCA) to find if the PCA was able to discriminate between the different types. It was unable to perform a clear differentiation between categories, as there is no distinct grouping as there is much overlap between County Types with very similar cluster centers.
+
+```{r}
+#| label: pc1_pc2_score1
+
+ggplot(PC_data, aes(PC1, PC2)) + 
+  aes(color=PctEmpServices ,size=PerCapitaInc) +
+  geom_point( alpha= 0.4) +
+  scale_color_continuous(low="blue",high="red") +
+  facet_wrap(~County_type)
+```
+
+The above score plot above adds Percent employed in the sevices sector (a main contributing factor in PC2) mapped to color, and therefore the variance explained by tis variable is illustrated along the PC2 axis. This depiction was also applied to PC1 for the Per Capita Income mapped to size. This plot is just a visual representation of the singular major factors of variation along PC1 and PC2.
+
+
+### PC3 and PC4
+
+#### Loading Plots for PC3 and PC4
+
+```{r}
+#| label: pc3_pc4_loading
+
+data_pca$loadings[1:14, 3:4] %>% as.data.frame %>% rownames_to_column %>% ggplot() + 
+  geom_hline(aes(yintercept=0), lty=5) +   
+  geom_vline(aes(xintercept=0), lty=5) + 
+  ylab("PC4") + 
+  xlab("PC3") +   
+  geom_segment(aes(x=0, y=0, xend=Comp.3, yend=Comp.4), arrow=arrow(), col="red") +   
+  geom_label(aes(x=Comp.3*.6, y=Comp.4*.85, label=rowname), size = 3)
+
+
+```
+
+This second loading plot illustrates the the next two Principal Components. The Pecerent Employed in Manufacturing and Agriculture are the main variables associated with PC3. Percent of Children in Deep Poverty and Percent of people in Deep Poverty were the major contributors for PC4.
+
+#### Score Plots for PC3 and PC4
+
+```{r}
+#| label: pc3_pc4_score
+
+ggplot(PC_data, aes(PC3, PC4)) + 
+  geom_point(aes(color=PctEmpManufacturing,size=PctEmpAgriculture))  +
+  scale_color_continuous(low="blue",high="red")
+```
+
+The score plot above has Percent employed in the Manufacturing sector (a main contributing factor in PC3) mapped to color, and therefore the varience explained by this variable is illustrated along the PC3 axis. This depiction was also applied for the other coontributing variable for PC3: the Percent employed in the Agriculture sector. This was mapped to size to be a visual representation of how the loading values apply to the PCA score plot.

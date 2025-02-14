@@ -1,0 +1,549 @@
+---
+title: 'Modeling, Testing, and Predicting'
+author: "Maya Ylagan - SDS348"
+date: '2021-01-01'
+image: "/images/projects/confusion_matrix-1.png"
+description: ""
+tags:
+  - Markdown syntax
+  - Logistic
+  - Linear
+  - ANOVA
+  - Plotting
+execute: 
+  freeze: true
+  cache: true
+---
+
+## Introduction
+
+With the ongoing pandemic I went to HealthData.gov and found their Community Profile Report (CPR) – County-Level.  The following is some information on this dataset based on their documentation.  It was developed by Data Strategy and Execution Workgroup in the Joint Coordination Cell, under the White House COVID-19 Team. Each observation in the dataset is county-level.  It contains daily snapshots in time that focuses on recent COVID-19 outcomes in the last seven days and changes relative to the week prior.
+
+```{r}
+#| label: setup
+#| include: FALSE
+
+library(knitr)
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = knitr:::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_output(x, options)
+})
+
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE,fig.align="center",warning=FALSE,message=FALSE,fig.width=8, fig.height=5, linewidth=60)
+options(tibble.width = 100,width = 100)
+
+```
+
+
+
+## Package and Data import 
+
+#### Packages
+```{r}
+#| label: Packages
+
+library(tidyverse)
+library(mvtnorm)
+library(ggExtra)
+library(rstatix)
+library(sandwich)
+library(lmtest)
+library(interactions)
+library(plotROC)
+
+
+```
+
+
+#### Data Import
+```{r}
+#| label: Data
+
+FullCovid <- read_csv("data/ModelingTestingPredicting/COVID-19_Community_Profile_Report_-_County-Level.csv") 
+CovidData <- FullCovid %>% 
+  mutate( highCases = total_cases>median(total_cases,na.rm=T) ) %>% 
+  mutate( region=recode(state, ME="NE", MA="NE", RI="NE", CT="NE", NH="NE", VT="NE", NY="NE", PA="NE", NJ="NE", DE="NE", MD="NE", DC="NE", PR="SE", WV="SE", VA="SE", KY="SE", TN="SE", NC="SE", SC="SE", GA="SE", AL="SE", MS="SE", AR="SE", LA="SE", FL="SE", OH="MW", IN="MW", MI="MW", IL="MW", MO="MW", WI="MW", MN="MW", IA="MW", KS="MW", NE="MW", SD="MW", ND="MW", TX="SW", OK="SW", NM="SW", AZ="SW", CO="W", WY="W", MT="W", ID="W", WA="W", OR="W", UT="W", NV="W", CA="W", AK="W", HI="W") ) %>% 
+  select(fips, county, region, highCases, everything(), -state,-fema_region)
+```
+Here I defined high and low cases by above and below the median value, and recoded the states into regions (NE:North East,SE:South East,MW:Midwest,SW:South West,W:West).
+
+---------------------------------------------------
+
+## MANOVA
+### Run MANOVA
+```{r}
+#| label: MANOVA
+
+man1<-manova(cbind(total_cases,
+                   total_deaths, 
+                   cases_last_7_days, 
+                   deaths_last_7_days, 
+                   test_positivity_rate_last_7_days,
+                   confirmed_covid_hosp_last_7_days)  ~ 
+               region, 
+             data=CovidData)
+summary(man1)
+```
+The MANOVA results indicate that total cases, total deaths, cases from the last 7 days, deaths from the last 7 days, test positivity rate from the last 7 days, and confirmed COVID hospitalizations show a mean difference across different regions of the US.
+
+
+### Univariate ANOVAs
+```{r}
+#| label: Univariate_ANOVA
+
+summary.aov(man1)
+```
+Post-hoc univariate ANOVAs each show the prior mentioned predictor variables illustrate a mean difference across region.
+
+### Post-hoc t-tests
+```{r}
+#| label: posthoc_ttest
+
+#Total Cases
+pairwise.t.test(CovidData$total_cases, 
+                CovidData$region, 
+                p.adj="none")$p.value*67 >0.05
+
+#Total Deaths
+pairwise.t.test(CovidData$total_deaths, CovidData$region, p.adj="none")$p.value *67 >0.05
+
+#Cases in the Last 7 Days
+pairwise.t.test(CovidData$cases_last_7_days, CovidData$region, p.adj="none")$p.value *67 >0.05
+
+#Deaths int the Last 7 Days
+pairwise.t.test(CovidData$deaths_last_7_days, CovidData$region, p.adj="none")$p.value *67 >0.05
+
+#Test Positivity Rate in the Last 7 Days
+pairwise.t.test(CovidData$test_positivity_rate_last_7_days, CovidData$region, p.adj="none")$p.value *67 >0.05
+
+#Confirmed Covid Hospitalization in the last 7 Days
+pairwise.t.test(CovidData$confirmed_covid_hosp_last_7_days, CovidData$region, p.adj="none")$p.value *67 >0.05
+```
+The above matrices illustrate which group means significantly differ by region and by predictor variable (accounting for the change in significance level mentioned below)
+
+#### Significance level (α):
+```{r}
+#| label: alpha
+
+1-(0.95)^67
+0.05/67
+```
+With 6 numeric predictors and 5 catagorical groups, 67 inference tests were done.  This creates a 96.8% chance of having a Type-1 Error.  Thus a Bonferroni correction will be done to reduce the 0.05 signifcance level to 0.00075 (7.5e-4).*
+
+### MANOVA assumptions
+```{r}
+#| label: MANOVA_assumptions
+
+group <- CovidData %>% 
+  na.omit() %>% 
+  select(region) %>% 
+  mutate(region = as.factor(region))
+
+DVs <- CovidData %>% 
+  na.omit() %>% 
+  select(total_cases,
+         total_deaths, 
+         cases_last_7_days, 
+         deaths_last_7_days, 
+         test_positivity_rate_last_7_days, 
+         confirmed_covid_hosp_last_7_days) 
+
+#Test multivariate normality for each group (null: normality met)
+sapply(split(DVs,group), mshapiro_test)
+
+```
+The MANOVA fails the first assumption of normality, the other many other assumptions to check that are harder to meet such as Homogeneity of within-group covariance, Linear relationships among dependent variables, and the absence of outliers.  This MANOVA is just a proof of concept example.
+
+***
+
+
+## Randomization test
+```{r}
+#| label: randomization_test
+
+randData <- CovidData %>% 
+  na.omit() %>% 
+  select(test_positivity_rate_last_7_days,cases_last_7_days)
+
+sampleCor <- cor(randData$test_positivity_rate_last_7_days, 
+                 randData$cases_last_7_days)
+
+rand_dist<-vector()
+for(i in 1:5000){
+  new<-data.frame(positives=sample(randData$test_positivity_rate_last_7_days),cases=randData$cases_last_7_days) 
+  rand_dist[i]<- cor(new$positives, new$cases)
+}
+
+ggplot( data.frame(rand_dist), aes(x=rand_dist) ) + 
+  geom_histogram() +
+  geom_vline(aes(xintercept=sampleCor), color="red")
+
+
+pval <- mean(rand_dist>sampleCor | rand_dist < -sampleCor)
+pval
+```
+The Null Hypothesis of this Randomization Test is that there is no correlation between `positive test rate in the past 7 days` and the `number of cases the past 7 days`.  The null distribution of the correlation coefficient is illustrated in dark grey, and the in-sample correlation coefficient is the red vertical line.  The probability of a value as extreme as the in-sample value under this "randomization distribution" is 0, therefore we reject the null hypothesis that there is no correlation between these 2 variables.
+
+***
+
+## Linear Regression Model:
+
+### Creating and Interpreting
+```{r}
+#| label: linear_model
+
+lmData <- CovidData %>% 
+  select( cases_last_7_days, 
+          test_positivity_rate_last_7_days, 
+          confirmed_covid_hosp_last_7_days ) %>% 
+  mutate( posRate = test_positivity_rate_last_7_days-mean(test_positivity_rate_last_7_days,na.rm=T) ) %>% 
+  mutate( confirmHosp = confirmed_covid_hosp_last_7_days-mean(CovidData$confirmed_covid_hosp_last_7_days,na.rm=T) )
+
+
+fit<-lm(cases_last_7_days~posRate*confirmHosp, data=lmData)
+summary(fit)
+```
+Given average `test positivity rate over the last 7 days` and average `confirmed COVID hospitalizations over the last 7 days` the predicted value of `cases the last 7 days` is 152.968 cases*
+
+431.0901 is the slope for `test positivity rate over the last 7 days` on `cases the last 7 days` while holding `confirmed covid hospitalizations over the last 7 days` constant
+
+8.5943 is the slope for `confirmed covid hospitalizations over the last 7 days` on `cases the last 7 days` while holding `test positivity rate over the last 7 days` constant
+
+The effect of `positivity rate over the last 7 days` is 11.9381 cases higher for every percent above the mean `positivity rate over the last 7 days`
+
+This linear model explains 82.42% of variance in `cases the last 7 days`
+
+### Plot of the Interaction 
+```{r}
+#| label: interaction_plot
+
+interact_plot(fit, confirmHosp, posRate, plot.points = T)
+```
+
+
+### Linear Model Assumptions
+```{r}
+#| label: linear_model_assumptions
+
+#Normality
+shapiro.test(fit$residuals) #H0: true distribution is normal
+
+#Homoscedasticity
+ggplot() + geom_point(aes(x=fit$fitted.values,y=fit$residuals))
+bptest(fit) # H0: homoskedastic
+
+```
+This linear model fails normality and homoscedasticity
+
+
+### Robust standard errors
+```{r}
+#| label: robust_SE
+
+coeftest(fit, vcov=vcovHC(fit))
+```
+Because the model failed homoskeydacity so robust SE were used allo2ing for non-constant variance.  The robust SE changed the significance of the interaction, increased the `positivity rate over the last 7 days` p-value,  but not above 0.05, and decreased all t values.
+
+
+
+```{r}
+#| label: bootstrap_SE
+
+samp_distn<-replicate(5000, {  
+  boot_dat <- sample_frac(lmData, replace=T) #take bootstrap sample of rows  
+  bootfit <- lm(cases_last_7_days~posRate*confirmHosp, data=boot_dat) #fit model on bootstrap sample  
+  coef(bootfit) #save coefs
+}) 
+
+samp_distn %>% t %>% as.data.frame %>% summarize_all(sd)
+```
+The bootstrapped SEs are very similar to robust SE and much higher than the original SE, illustrating the robust SE are a more accurate measure of the sample than than the original SE.
+
+
+
+***
+
+## Logistic Regression Models:
+
+### Logistic Model with 2 predictors
+#### Creating and Interpreting
+```{r}
+#| label: two_pred_logistic
+
+fit2 <- glm(highCases~cases_last_7_days+total_deaths, data=CovidData, family="binomial")
+summary(fit2)
+
+exp(fit2$coefficients)
+```
+Given the above model's coefficients: for every 1 unit increase in `cases in the last 7 days` the odds of `highCases` incrase by 1.01, and for every 1 unit increase in `total deaths` the odds of `highCases` increase by 1.02
+
+
+#### Confusion Matrix
+```{r}
+#| label: confusion_matrix
+
+CovidData <- CovidData %>% 
+  filter( complete.cases(CovidData$highCases),
+          complete.cases(CovidData$cases_last_7_days),
+          complete.cases(CovidData$total_deaths) )
+
+table(Predicted = (predict(fit2,type="response")>0.5) , 
+      Actual = CovidData$highCases) %>% 
+  as.data.frame() -> conf_mat
+
+conf_mat <- conf_mat %>% 
+  group_by(Actual) %>% 
+  mutate(percent=Freq/sum(Freq))
+
+ggplot(conf_mat) +
+  aes(y=factor(Predicted,levels=c(F,T)),
+      x=factor(Actual,levels=c(T,F)),
+      fill=Freq,
+      label=paste0(round(percent*100,2),"%") ) +
+  geom_tile() +
+  ggfittext::geom_fit_text(contrast = TRUE, reflow =TRUE) +
+  scale_colour_discrete() +
+  coord_fixed() + 
+  xlab("Actual") + 
+  ylab("Predicted") +
+  theme(legend.position = "none")
+
+
+
+
+```
+From the confusion matrix it appears the model is doing a decent job at classifying points with as little as 5.99% to 12.23% error.  
+
+
+
+```{r}
+class_diag<-function(probs,truth){
+  
+  tab<-table(factor(probs>.5,levels=c("FALSE","TRUE")),truth)
+  acc=sum(diag(tab))/sum(tab)
+  sens=tab[2,2]/colSums(tab)[2]
+  spec=tab[1,1]/colSums(tab)[1]
+  ppv=tab[2,2]/rowSums(tab)[2]
+
+  if( is.numeric(truth)==FALSE & 
+      is.logical(truth)==FALSE){
+    truth<-as.numeric(truth)-1
+  }
+  
+  #CALCULATE EXACT AUC
+  ord<-order(probs, decreasing=TRUE)
+  probs <- probs[ord]; truth <- truth[ord]
+  
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  
+  dup<-c(probs[-1]>=probs[-length(probs)], FALSE)
+  TPR<-c(0,TPR[!dup],1); FPR<-c(0,FPR[!dup],1)
+  
+  n <- length(TPR)
+  auc<- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+
+  data.frame(acc,sens,spec,ppv,auc)
+}
+
+probs <- predict(fit2)
+
+class_diag(probs, CovidData$highCases)
+```
+
+Measure | Value
+--------|-------
+Accuracy| 89.94 %
+Sensitivity | 83.49 %
+Specificity | 96.39 %
+Positive Predictive Value | 95.86 %
+Area Under the ROC Curve | 97.21 %
+
+The above table and provides diagnostic measures of the predictive power of the Logistic Model with 2 predictors.  
+
+
+#### Density Plot
+```{r}
+#| label: density_plot
+
+densityVal <- CovidData %>% mutate(logit=fitted(fit2) )
+
+ggplot(densityVal) + 
+  aes(x=logit, fill=highCases) +
+  geom_density(alpha=.5)
+```
+
+The above density plot illustrates the predictor value (logit) compared to the actual group membership to `highCases`.
+
+
+#### ROC and AUC
+```{r}
+#| label: ROC_AUC
+
+ROCplot <- ggplot(CovidData)+
+  aes(d=highCases,m=cases_last_7_days+total_deaths) +
+  geom_roc(n.cuts=0) 
+ROCplot
+calc_auc(ROCplot)
+
+```
+The above ROC curve is of the logistic model with 2 predictors. Based on the shape of the ROC curve and the AUC of the ROC curve, the classification of this 2 predictor logistical model is very good
+
+
+### Logistic Model with all predictors
+#### Creating and Interpreting
+```{r}
+#| label: full_logistic
+
+lassoData <- CovidData %>% 
+  select(-fips, -county,-date) %>% 
+  na.omit
+fit3 <- lm(highCases~(.), data=lassoData)
+probs <- predict(fit3,data=CovidData)
+class_diag(probs, lassoData$highCases)
+```
+From including all variables the model was made more flexible, but had lower values for Accuracy, Sensitivity, and AUC, as there was more noise introduced.
+
+Measure | 2 Predictor Value| All Predictor Value
+--------|------------------|--------------------
+Accuracy| 89.94 % | 93.38 % 
+Sensitivity | 83.49 % | 100 % 
+Specificity | 96.39 % | 0.02 % 
+Positive Predictive Value | 95.86 % | 93.38 % 
+Area Under the ROC Curve | 97.21 % | 93.59 % 
+
+#### 10 Fold Cross Validation
+```{r}
+#| label: CV_10fold
+
+k=10
+
+cvData<-lassoData[sample(nrow(lassoData)),] #randomly order rows
+folds<-cut(seq(1:nrow(lassoData)),breaks=k,labels=F) #create folds
+
+diags<-NULL
+for(i in 1:k){
+  ## Create training and test sets  
+  train<-cvData[folds!=i,]   
+  test<-cvData[folds==i,]  
+  truth<-test$highCases ## Truth labels for fold i
+  
+  ## Train model on training set (all but fold i)  
+  lassofit<-glm(highCases~(.),data=train,family="binomial")
+  
+  ## Test model on test set (fold i)   
+  probs<-predict(lassofit,newdata = test,type="response")
+  
+  ## Get diagnostics for fold i  
+  diags<-rbind(diags,class_diag(probs,truth))
+}
+
+summarize_all(diags,mean) #average diagnostics across all k folds
+```
+There is surprisingly no sign of overfitting the more flexible model by using all predictors. When having many degrees of freedom you can over fit the cross-validation criteria for the model to be tuned to exploit the random variation in the dataset rather than improve predictive performance, which is what likely is occurring here.  To counteract this LASSO will be used to reduce the degrees of freedom.
+
+#### LASSO
+```{r}
+#| label: LASSO
+
+library(glmnet)
+
+y<-as.matrix(lassoData$highCases) #grab response
+x<-model.matrix(highCases~(.),data=lassoData)[,-1] #grab predictors
+
+cv<-cv.glmnet(x,y,family="binomial")
+lasso<-glmnet(x,y,family="binomial",lambda=cv$lambda.1se)
+
+var_to_select <- dimnames(coef(lasso))[[1]][coef(lasso)@i +1]
+
+
+newLassoData <- lassoData %>% 
+  mutate(regionNE=(region=="NE"))  %>% 
+  mutate(regionSW=(region=="SW")) %>% 
+  mutate(regionW =(region=="W" ))
+
+lassoSelectedVarFunction <- highCases~
+  regionNE+
+  regionSW+
+  regionW+
+  cases_per_100k_last_7_days+
+  total_cases+
+  cases_pct_change_from_prev_week+
+  deaths_per_100k_last_7_days+
+  total_deaths+
+  deaths_pct_change_from_prev_week+
+  test_positivity_rate_last_7_days+
+  total_tests_last_7_days+
+  total_tests_per_100k_last_7_days+
+  test_positivity_rate_pct_change_from_prev_week+
+  total_tests_pct_change_from_prev_week+
+  confirmed_covid_hosp_last_7_days+
+  confirmed_covid_hosp_per_100_beds_last_7_days+
+  confirmed_covid_hosp_per_100_beds_pct_change_from_prev_week+
+  suspected_covid_hosp_last_7_days+
+  suspected_covid_hosp_per_100_beds_last_7_days+
+  suspected_covid_hosp_per_100_beds_pct_change_from_prev_week+
+  pct_inpatient_beds_used_avg_last_7_days+
+  pct_inpatient_beds_used_abs_change_from_prev_week+
+  pct_icu_beds_used_avg_last_7_days+
+  pct_icu_beds_used_abs_change_from_prev_week+
+  pct_icu_beds_used_covid_avg_last_7_days+
+  pct_icu_beds_used_covid_abs_change_from_prev_week+
+  pct_vents_used_avg_last_7_days+
+  pct_vents_used_abs_change_from_prev_week+
+  pct_vents_used_covid_avg_last_7_days+
+  pct_vents_used_covid_abs_change_from_prev_week
+
+```
+The variables that were selected by LASSO were those that increased the ability of the model to predict highCases and did not add extra noise in the data for the model to learn.  We can see that most of the variables were selected, so the cross-validation critera was not over fit.   
+
+#### CV with LASSO Variables
+```{r}
+#| label: LASSO_CV
+
+######## IN-SAMPLE ########
+fitLasso <- glm(lassoSelectedVarFunction, data=newLassoData)
+probs <- predict(fitLasso)
+class_diag(probs, newLassoData$highCases)
+
+
+######## OUT-OF-SAMPLE ########
+k=10
+cvData<-newLassoData[sample(nrow(newLassoData)),] #randomly order rows
+folds<-cut(seq(1:nrow(newLassoData)),breaks=k,labels=F) #create folds
+
+diags<-NULL
+for(i in 1:k){
+  ## Create training and test sets  
+  train<-cvData[folds!=i,]   
+  test<-cvData[folds==i,]  
+  truth<-test$highCases ## Truth labels for fold i
+
+  lassofit<-glm(lassoSelectedVarFunction,data=train,family="binomial")  ## Train model on training set (all but fold i)  
+  probs<-predict(lassofit,newdata = test,type="response") ## Test model on test set (fold i)   
+  diags<-rbind(diags,class_diag(probs,truth))  ## Get diagnostics for fold i
+}
+
+summarize_all(diags,mean) #average diagnostics across all k folds
+```
+
+Measure | 2 Predictor Value| All Predictor Value | Post-LASSO Value | CV Post-LASSO Value
+--------|------------------|---------------------|---------------------------------------
+Accuracy| 89.94 % | 93.38 % | 93.39 % | 97.36 % 
+Sensitivity | 83.49 % | 100 % | 100 % | 98.59 % 
+Specificity | 96.39 % | 0.02 % | 1.96 % | 79.42 % 
+Positive Predictive Value | 95.86 % | 93.38 % | 93.38 % | 98.61 %
+Area Under the ROC Curve | 97.21 % | 93.59 % | 92.90 % | 90.49 % 
+
+
+
+
+
+Using the variables that LASSO selected, the model's out-of-sample AUC is higher than the model's in-sample AUC
