@@ -1,8 +1,8 @@
 ---
 title: 'Modeling, Testing, and Predicting'
-author: "Maya Ylagan - SDS348"
+author: "Maya Ylagan"
 date: '2021-01-01'
-image: "/images/projects/confusion_matrix-1.png"
+# image: "/images/projects/confusion_matrix-1.png"
 description: ""
 tags:
   - Markdown syntax

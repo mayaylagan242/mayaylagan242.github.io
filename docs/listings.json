@@ -9,9 +9,9 @@
     "listing": "/projects/index.html",
     "items": [
       "/projects/ExploratoryDataAnalysis.html",
+      "/projects/MNIST_classification_proj.html",
       "/projects/sql_intro_proj.html",
-      "/projects/ModelingTestingPredicting.html",
-      "/projects/MNIST_classification_proj.html"
+      "/projects/ModelingTestingPredicting.html"
     ]
   }
 ]
