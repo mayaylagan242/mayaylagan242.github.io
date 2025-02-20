@@ -1,7 +1,7 @@
 ---
 title: 'Modeling, Testing, and Predicting'
 author: "Maya Ylagan"
-date: '2021-01-01'
+date: '2021-04-20'
 # image: "/images/projects/confusion_matrix-1.png"
 description: ""
 tags:
@@ -48,7 +48,7 @@ options(tibble.width = 100,width = 100)
 #### Packages
 ```{r}
 #| label: Packages
-#| echo: false
+#| output: false
 
 library(tidyverse)
 library(mvtnorm)
@@ -67,7 +67,7 @@ library(knitr)
 Here I defined high and low cases by above and below the median value, and recoded the states into regions (NE:North East,SE:South East,MW:Midwest,SW:South West,W:West).
 ```{r}
 #| label: Data
-#| echo: false
+#| output: false
 
 
 FullCovid <- read_csv("data/ModelingTestingPredicting/COVID-19_Community_Profile_Report_-_County-Level.csv") 
@@ -75,6 +75,10 @@ CovidData <- FullCovid %>%
   mutate( highCases = total_cases>median(total_cases,na.rm=T) ) %>% 
   mutate( region=recode(state, ME="NE", MA="NE", RI="NE", CT="NE", NH="NE", VT="NE", NY="NE", PA="NE", NJ="NE", DE="NE", MD="NE", DC="NE", PR="SE", WV="SE", VA="SE", KY="SE", TN="SE", NC="SE", SC="SE", GA="SE", AL="SE", MS="SE", AR="SE", LA="SE", FL="SE", OH="MW", IN="MW", MI="MW", IL="MW", MO="MW", WI="MW", MN="MW", IA="MW", KS="MW", NE="MW", SD="MW", ND="MW", TX="SW", OK="SW", NM="SW", AZ="SW", CO="W", WY="W", MT="W", ID="W", WA="W", OR="W", UT="W", NV="W", CA="W", AK="W", HI="W") ) %>% 
   select(fips, county, region, highCases, everything(), -state,-fema_region)
+```
+
+```{r}
+kable(head(CovidData))
 ```
   
 ---------------------------------------------------
@@ -172,8 +176,8 @@ kable(confirmed_covid_hosp_last_7_days)
 ```
 
 
-#### Significance level (α):
-With 6 numeric predictors and 5 catagorical groups, 67 inference tests were done.  This creates a 96.8% chance of having a Type-1 Error.  Thus a Bonferroni correction will be done to reduce the 0.05 signifcance level to 0.00075 (7.5e-4).*
+#### Significance level:
+With 6 numeric predictors and 5 catagorical groups, 67 inference tests were done.  This creates a 96.8% chance of having a Type-1 Error.  Thus a Bonferroni correction will be done to reduce the 0.05 signifcance level of α to 0.00075 (7.5e-4).*
 ```{r}
 #| label: alpha
 1-(0.95)^67 # type one error rate
@@ -386,13 +390,16 @@ samp_distn %>% t() %>% as.data.frame() %>% summarize_all(sd)
 Given the model's coefficients: for every 1 unit increase in `cases in the last 7 days` the odds of `highCases` incrase by 1.04, and for every 1 unit increase in `total deaths` the odds of `highCases` increase by 1.06
 ```{r}
 #| label: two_pred_logistic
+#| output: false
 
 fit2 <- glm(
   highCases~cases_last_7_days+total_deaths,
   data=CovidData, 
   family="binomial")
 summary(fit2)
+```
 
+```{r}
 exp(fit2$coefficients)
 ```
 
@@ -655,6 +662,7 @@ lassoSelectedVarFunction
 #### CV with LASSO Variables
 ```{r}
 #| label: LASSO_CV
+#| output: false
 
 ######## IN-SAMPLE ########
 fitLasso <- glm(lassoSelectedVarFunction, data=newLassoData)
@@ -684,8 +692,10 @@ for(i in 1:k){
   probs<-predict(lassofit,newdata = test,type="response") ## Test model on test set (fold i)   
   diags<-rbind(diags,class_diag(probs,truth))  ## Get diagnostics for fold i
 }
+```
 
 
+```{r}
 #average diagnostics across all k folds
 output_lasso_cv <- 
   summarize_all(diags,mean) %>%
